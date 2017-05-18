@@ -834,6 +834,6 @@ try {
 
 [iOS组件化方案调研](http://www.jianshu.com/p/34f23b694412)
 
-[技术男的后花园](http://www.cnblogs.com/baronzhang/p/6442047.html)
+[安居客Android项目架构演进](http://www.cnblogs.com/baronzhang/p/6442047.html)
 
 [关于Android模块化我有一些话不知当讲不当讲](https://github.com/LiushuiXiaoxia/AndroidModular/)
