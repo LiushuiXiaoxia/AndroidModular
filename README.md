@@ -22,19 +22,19 @@
 
 在刚刚开始的时候，项目架构使用的是MVP模式，这也是最近几年很流行的一个架构方式，下面是项目的原始设计。
 
-![MVP](doc/1.png)
+![MVP](https://raw.githubusercontent.com/LiushuiXiaoxia/AndroidModular/master/doc/1.png)
 
 随着业务的增多，我们添加了Domain的概念，Domain从Data中获取数据，Data可能会是Net，File，Cache各种IO等，然后项目架构变成了这样。
 
-![MVP2](doc/2.png)
+![MVP2](https://raw.githubusercontent.com/LiushuiXiaoxia/AndroidModular/master/doc/2.png)
 
 再然后随着人员增多，各种基础组件也变的越来越多，业务也很复杂，业务与业务之间还有很强的耦合，就变成了这样的。
 
-![](doc/3.png)
+![](https://raw.githubusercontent.com/LiushuiXiaoxia/AndroidModular/master/doc/3.png)
 
 使用模块化技术以后，架构变成了这样。
 
-![组件化架构](doc/4.png)
+![组件化架构](https://raw.githubusercontent.com/LiushuiXiaoxia/AndroidModular/master/doc/4.png)
 
 ## 技术要点
 
@@ -46,7 +46,7 @@
 
 如图所示，我把各个模块单独分为一个独立的项目。
 
-![组件化架构](doc/5.png)
+![组件化架构](https://raw.githubusercontent.com/LiushuiXiaoxia/AndroidModular/master/doc/5.png)
 
 在主项目中使用gradle添加代码依赖。
 
@@ -120,7 +120,7 @@ gradle依赖如下。
 
 再来看下App的架构。
 
-![App架构](doc/3.png)
+![App架构](https://raw.githubusercontent.com/LiushuiXiaoxia/AndroidModular/master/doc/3.png)
 
 第一个问题，原先的方式，直接指定某个页面的ActivityClass，然后通过intent跳转即可，但是在新的架构中，由于shopping模块不直接依赖user，那么则不能使用原始的进行跳转，我们解决方式使用Router路由跳转。
 
