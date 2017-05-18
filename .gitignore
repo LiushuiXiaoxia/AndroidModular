@@ -6,3 +6,6 @@
 /captures
 .externalNativeBuild
 .idea
+
+module
+module.gradle

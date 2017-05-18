@@ -1,1 +1,10 @@
-include ':app'
+include ':JavaBase'
+include ':app', ':ModuleBase', ':ModuleService', ':ModuleComponent', ':ModuleUser', ':ModuleOrder', ':ModuleShopping'
+include ':ImplementsProcess', ':ImplementsTransformPlugin'
+include ':TestPlugin', ':TestPluginLib'
+
+
+try {
+    apply from: "./module.gradle"
+} catch (e) {
+}

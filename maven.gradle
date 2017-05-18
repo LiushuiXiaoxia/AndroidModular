@@ -1,0 +1,12 @@
+apply plugin: 'maven'
+
+group = 'cn.mycommons'
+version = "$LIB_VERSION"
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri("${project.rootDir.absolutePath}/repo"))
+        }
+    }
+}

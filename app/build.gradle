@@ -11,6 +11,9 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    dataBinding {
+        enabled = true
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -27,4 +30,17 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
+
+    // common
+    // compile project(':ModuleBase')
+    // compile project(':ModuleComponent')
+    // compile project(':ModuleService')
+    compile "cn.mycommons:ModuleBase:$LIB_VERSION"
+    compile "cn.mycommons:ModuleComponent:$LIB_VERSION"
+    compile "cn.mycommons:ModuleService:$LIB_VERSION"
+
+    // biz
+    compile project(':ModuleUser')
+    compile project(':ModuleOrder')
+    compile project(':ModuleShopping')
 }
