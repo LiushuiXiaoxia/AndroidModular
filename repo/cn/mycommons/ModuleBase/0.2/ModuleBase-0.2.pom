@@ -8,6 +8,12 @@
   <packaging>aar</packaging>
   <dependencies>
     <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-stdlib-jre7</artifactId>
+      <version>1.1.2-4</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>com.android.support</groupId>
       <artifactId>appcompat-v7</artifactId>
       <version>25.3.1</version>
@@ -16,7 +22,7 @@
     <dependency>
       <groupId>cn.mycommons</groupId>
       <artifactId>JavaBase</artifactId>
-      <version>0.1</version>
+      <version>0.2</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
