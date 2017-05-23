@@ -16,7 +16,7 @@ import java.util.jar.JarOutputStream
  * ImplementsTransform <br/>
  * Created by xiaqiulei on 2017-05-15.
  */
-public class ImplementsTransform extends Transform {
+class ImplementsTransform extends Transform {
 
     static final String IMPLEMENTS_MANAGER = "cn/mycommons/modulebase/annotations/ImplementsManager.class"
     static final String IMPLEMENTS_MANAGER_NAME = "cn.mycommons.modulebase.annotations.ImplementsManager"
@@ -33,17 +33,17 @@ public class ImplementsTransform extends Transform {
     }
 
     @Override
-    public String getName() {
+    String getName() {
         return "ImplementsTransform"
     }
 
     @Override
-    public Set<QualifiedContent.ContentType> getInputTypes() {
+    Set<QualifiedContent.ContentType> getInputTypes() {
         return ImmutableSet.of(QualifiedContent.DefaultContentType.CLASSES)
     }
 
     @Override
-    public Set<? super QualifiedContent.Scope> getScopes() {
+    Set<? super QualifiedContent.Scope> getScopes() {
         return ImmutableSet.of(
                 QualifiedContent.Scope.PROJECT,
                 QualifiedContent.Scope.PROJECT_LOCAL_DEPS,
@@ -62,7 +62,7 @@ public class ImplementsTransform extends Transform {
     void transform(TransformInvocation transformInvocation)
             throws TransformException, InterruptedException, IOException {
         super.transform(transformInvocation)
-        long time1 = System.currentTimeMillis();
+        long time1 = System.currentTimeMillis()
         log(this.toString() + ".....transform")
 
         TransformOutputProvider outputProvider = transformInvocation.outputProvider
@@ -132,7 +132,7 @@ public class ImplementsTransform extends Transform {
         Map<String, String> config = new LinkedHashMap<>()
 
         implementsList.each {
-            def str = it.anImplements.toString();
+            def str = it.anImplements.toString()
             log("anImplements =" + it.anImplements)
             def parent = str.substring(str.indexOf("(") + 1, str.indexOf(")")).replace("parent=", "").replace(".class", "")
             log("parent =" + parent)
@@ -144,7 +144,7 @@ public class ImplementsTransform extends Transform {
 
         log("config = " + config)
 
-        long time2 = System.currentTimeMillis();
+        long time2 = System.currentTimeMillis()
 
         if (implementsManagerJar != null) {
             def implementsManagerCtClass = classPool.get(IMPLEMENTS_MANAGER_NAME)

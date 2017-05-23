@@ -1,6 +1,6 @@
 include ':JavaBase'
 include ':app', ':ModuleBase', ':ModuleService', ':ModuleComponent', ':ModuleUser', ':ModuleOrder', ':ModuleShopping'
-include ':ImplementsProcess', ':ImplementsTransformPlugin'
+include ':ImplementsProcess', ':buildSrc'
 include ':TestPlugin', ':TestPluginLib'
 
 

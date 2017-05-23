@@ -1,9 +1,13 @@
 apply plugin: 'java'
 apply plugin: 'groovy'
 
+repositories {
+    jcenter()
+    maven { url uri("./../repo") }
+}
+
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
-
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -15,7 +19,5 @@ dependencies {
     compile 'org.javassist:javassist:3.22.0-CR1'
 
     // compile project(':JavaBase')
-    compile "cn.mycommons:JavaBase:$LIB_VERSION"
+    compile "cn.mycommons:JavaBase:0.2"
 }
-
-apply from: "${project.rootDir.absolutePath}/maven.gradle"

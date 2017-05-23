@@ -4,11 +4,11 @@ buildscript {
     repositories {
         jcenter()
         mavenCentral()
-        maven { url uri("${project.rootDir.absolutePath}/repo") }
+        // maven { url uri("${project.rootDir.absolutePath}/repo") }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.2'
-        classpath "cn.mycommons:ImplementsTransformPlugin:$LIB_VERSION"
+        // classpath "cn.mycommons:ImplementsTransformPlugin:$LIB_VERSION"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
