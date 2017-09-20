@@ -1,6 +1,32 @@
 # 关于Android模块化我有一些话不知当讲不当讲
 
 ---
+<!-- TOC -->
+
+- [关于Android模块化我有一些话不知当讲不当讲](#关于android模块化我有一些话不知当讲不当讲)
+    - [模块化场景](#模块化场景)
+    - [架构演变](#架构演变)
+    - [技术要点](#技术要点)
+        - [Library module](#library-module)
+        - [Library module开发问题](#library-module开发问题)
+        - [依赖管理](#依赖管理)
+        - [数据通信](#数据通信)
+            - [页面路由跳转](#页面路由跳转)
+            - [Interface和Implement](#interface和implement)
+            - [EventBus](#eventbus)
+    - [映射匹配](#映射匹配)
+        - [Map register](#map-register)
+        - [APT](#apt)
+        - [Gradle Transform](#gradle-transform)
+        - [映射匹配总结](#映射匹配总结)
+    - [开发调试技巧](#开发调试技巧)
+        - [Debug](#debug)
+        - [容器设计](#容器设计)
+        - [CI](#ci)
+    - [总结](#总结)
+    - [相关资料](#相关资料)
+
+<!-- /TOC -->
 
 最近公司一个项目使用了模块化设计，本人参与其中的一个小模块开发，但是整体的设计并不是我架构设计的，开发半年有余，在此记录下来我的想法。
 
