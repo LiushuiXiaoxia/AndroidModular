@@ -15,8 +15,8 @@ dependencies {
     compile gradleApi()
     compile localGroovy()
 
-    compile 'com.android.tools.build:gradle:2.3.2'
-    compile 'org.javassist:javassist:3.22.0-CR1'
+    compile "com.android.tools.build:gradle:3.1.2"
+    compile 'org.javassist:javassist:3.22.0-GA'
 
     // compile project(':JavaBase')
     compile "cn.mycommons:JavaBase:0.2"

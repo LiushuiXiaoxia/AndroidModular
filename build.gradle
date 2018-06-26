@@ -1,13 +1,17 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+    ext.kotlin_version = '1.2.50'
+    ext.gradle_version = '3.1.2'
     repositories {
-        jcenter()
+        google()
         mavenCentral()
+        jcenter()
+        maven { url "https://jitpack.io" }
         // maven { url uri("${project.rootDir.absolutePath}/repo") }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.2'
+        classpath "com.android.tools.build:gradle:$gradle_version"
         // classpath "cn.mycommons:ImplementsTransformPlugin:$LIB_VERSION"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
@@ -16,10 +20,40 @@ buildscript {
     }
 }
 
+ext {
+    // Sdk and tools
+    minSdkVersion = 15
+    targetSdkVersion = 27
+    compileSdkVersion = 27
+    buildToolsVersion = '27.0.3'
+
+    kotlin_version = '1.2.50'
+
+    // App dependencies
+    supportLibraryVersion = '27.1.1'
+    constraintlayoutVersion = '1.1.2'
+    gsonVersion = '2.8.0'
+
+    dagger2Version = '2.8'
+    rxjava2Version = '2.0.6'
+    rxandroidVersion = '2.0.1'
+    butterKnifeVersion = '8.5.1'
+    timberVersion = '4.5.1'
+    debugDBVersion = '1.0.0'
+
+    //Test dependencies
+    junitVersion = '4.12'
+    espressoVersion = '2.2.2'
+    mockitoVersion = '2.7.1'
+}
+
+
 allprojects {
     repositories {
-        jcenter()
+        google()
         mavenCentral()
+        jcenter()
+        maven { url "https://jitpack.io" }
         maven { url uri("${project.rootDir.absolutePath}/repo") }
     }
 }
