@@ -16,9 +16,9 @@ class ModuleConfig internal constructor() : IModuleConfig {
     private val serviceConfig: MutableMap<Class<*>, Class<*>>
 
     init {
-        activityRouterConfig = HashMap<String, Class<out Activity>>()
-        routerProcessConfig = HashMap<String, IRouterProcess>()
-        serviceConfig = HashMap<Class<*>, Class<*>>()
+        activityRouterConfig = HashMap()
+        routerProcessConfig = HashMap()
+        serviceConfig = HashMap()
     }
 
     override fun registerRouter(uri: String, activityClass: Class<out Activity>) {

@@ -18,7 +18,7 @@ internal class ModuleLifeCycleManager(application: Application) {
     private val moduleLifeCycleList: MutableList<IModuleLifeCycle>
 
     init {
-        moduleLifeCycleList = ArrayList<IModuleLifeCycle>()
+        moduleLifeCycleList = ArrayList()
         moduleLifeCycleList.add(UserModuleLifeCycle(application))
         moduleLifeCycleList.add(OrderModuleLifeCycle(application))
         moduleLifeCycleList.add(ShoppingModuleLifeCycle(application))
