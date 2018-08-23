@@ -20,7 +20,7 @@ object RouterHelper {
             if (process != null) {
                 process.proeces(uri)
             } else {
-                throw RuntimeException("can not dispatch uri = " + uri)
+                throw RuntimeException("can not dispatch uri = $uri")
             }
         }
     }

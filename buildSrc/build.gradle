@@ -20,5 +20,5 @@ dependencies {
     compile 'org.javassist:javassist:3.22.0-GA'
 
     // compile project(':JavaBase')
-    compile "cn.mycommons:JavaBase:0.2"
+    compile "cn.mycommons:JavaBase:0.3"
 }
