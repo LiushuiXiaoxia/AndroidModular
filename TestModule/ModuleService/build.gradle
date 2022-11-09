@@ -27,8 +27,8 @@ dependencies {
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.ext.kotlin_version"
 
     // common
-    // api project(':ModuleBase')
-    api "cn.mycommons:ModuleBase:$LIB_VERSION"
+    // api "cn.mycommons:ModuleBase:$LIB_VERSION"
+    implementation project(':TestModule:ModuleBase')
 }
 
 // apply from: "${project.rootDir.absolutePath}/maven.gradle"

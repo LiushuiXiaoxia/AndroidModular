@@ -29,8 +29,8 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
 
     // common
-    // compile project(':ModuleBase')
-    api "cn.mycommons:ModuleBase:$LIB_VERSION"
+    implementation project(':TestModule:ModuleBase')
+    // api "cn.mycommons:ModuleBase:$LIB_VERSION"
 }
 
 // apply from: "${project.rootDir.absolutePath}/maven.gradle"

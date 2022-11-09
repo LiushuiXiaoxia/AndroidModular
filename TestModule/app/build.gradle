@@ -1,11 +1,12 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+// apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
+
     defaultConfig {
         applicationId "cn.mycommons.androidmodular"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -13,9 +14,11 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
     dataBinding {
         enabled = true
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -27,11 +30,11 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
-    implementation "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintlayoutVersion"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.ext.kotlin_version"
+    // implementation "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
+    // implementation "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintlayoutVersion"
+    // implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.ext.kotlin_version"
 
-    kapt "com.android.databinding:compiler:$rootProject.ext.gradle_version"
+    // kapt "com.android.databinding:compiler:$rootProject.ext.gradle_version"
 
     // common
     implementation project(':TestModule:ModuleBase')

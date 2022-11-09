@@ -25,15 +25,16 @@ android {
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
-    api "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
-    api "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintlayoutVersion"
-    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.ext.kotlin_version"
+//    api "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
+//    api "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintlayoutVersion"
+//    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.ext.kotlin_version"
 
     // common
-//    compile project(':ModuleBase')
-//    compile project(':ModuleComponent')
-//    compile project(':ModuleService')
-    api "cn.mycommons:ModuleBase:$LIB_VERSION"
-    api "cn.mycommons:ModuleComponent:$LIB_VERSION"
-    api "cn.mycommons:ModuleService:$LIB_VERSION"
+    implementation project(':TestModule:ModuleBase')
+    implementation project(':TestModule:ModuleComponent')
+    implementation project(':TestModule:ModuleService')
+
+//    api "cn.mycommons:ModuleBase:$LIB_VERSION"
+//    api "cn.mycommons:ModuleComponent:$LIB_VERSION"
+//    api "cn.mycommons:ModuleService:$LIB_VERSION"
 }

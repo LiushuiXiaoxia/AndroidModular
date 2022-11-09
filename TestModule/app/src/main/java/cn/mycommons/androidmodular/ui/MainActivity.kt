@@ -1,8 +1,8 @@
 package cn.mycommons.androidmodular.ui
 
-import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import cn.mycommons.androidmodular.InjectHelper
 import cn.mycommons.androidmodular.R
 import cn.mycommons.androidmodular.RouterHelper
@@ -12,7 +12,7 @@ import cn.mycommons.moduleservice.IUserService
 
 class MainActivity : BaseActivity() {
 
-    private lateinit var binding:ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
