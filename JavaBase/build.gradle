@@ -4,8 +4,10 @@ apply plugin: 'java-library'
 sourceCompatibility = "8"
 targetCompatibility = "8"
 
+group "cn.mycommons"
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
 
-apply from: "${project.rootDir.absolutePath}/maven.gradle"
+// apply from: "${project.rootDir.absolutePath}/../maven.gradle"

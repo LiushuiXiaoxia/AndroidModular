@@ -35,7 +35,7 @@ dependencies {
 //    api "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintlayoutVersion"
 
     // compile project(':JavaBase')
-    api "cn.mycommons:JavaBase:$LIB_VERSION"
+    api "cn.mycommons:JavaBase"
 }
 
 // apply from: "${project.rootDir.absolutePath}/maven.gradle"

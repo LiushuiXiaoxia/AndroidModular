@@ -1,13 +1,15 @@
+includeBuild('JavaBase')
+
 if (Boolean.parseBoolean(PLUGIN_DEV)) {
     includeBuild("ModulePlugin")
 }
 
-include ':JavaBase'
 include ':ImplementsProcess'
 
 
-// include ':TestPlugin:TestPluginLib'
-// include ':TestPlugin:TestPluginApp'
+include ':TestPlugin:TestPluginLib'
+include ':TestPlugin:TestPluginApp'
+
 
 include ':TestModule:ModuleBase', ':TestModule:ModuleService', ':TestModule:ModuleComponent'
 include ':TestModule:ModuleUser', ':TestModule:ModuleOrder', ':TestModule:ModuleShopping'

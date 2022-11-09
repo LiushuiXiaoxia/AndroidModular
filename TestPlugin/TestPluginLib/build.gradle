@@ -34,5 +34,5 @@ android {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.ext.kotlin_version"
 
-    api "cn.mycommons:JavaBase:$LIB_VERSION"
+    implementation "cn.mycommons:JavaBase"
 }
