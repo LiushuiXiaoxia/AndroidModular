@@ -13,7 +13,5 @@ class ModulePlugin : Plugin<Project> {
     override fun apply(project: Project) {
         val app = project.extensions.getByType(AppExtension::class.java)
         app.registerTransform(ModulePluginTransform(project))
-
-        // exitProcess(11)
     }
 }

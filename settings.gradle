@@ -3,15 +3,10 @@ if (Boolean.parseBoolean(PLUGIN_DEV)) {
 }
 
 include ':JavaBase'
-include ':ImplementsProcess' // , ':buildSrc'
+include ':ImplementsProcess'
 
-//include ':app', ':ModuleBase', ':ModuleService', ':ModuleComponent', ':ModuleUser', ':ModuleOrder', ':ModuleShopping'
 
 include ':TestPluginLib'
 include ':TestPluginApp'
 
-
-try {
-    apply from: "./module.gradle"
-} catch (e) {
-}
+//include ':app', ':ModuleBase', ':ModuleService', ':ModuleComponent', ':ModuleUser', ':ModuleOrder', ':ModuleShopping'

@@ -20,16 +20,6 @@ import java.util.jar.JarOutputStream
  */
 class ModulePluginTransform(private val project: Project) : Transform() {
 
-    companion object {
-        const val IMPLEMENTS_MANAGER = "cn/mycommons/modulebase/annotations/ImplementsManager.class"
-        const val IMPLEMENTS_MANAGER_NAME = "cn.mycommons.modulebase.annotations.ImplementsManager"
-    }
-
-    private fun log(msg: String, vararg args: Any) {
-        val text = String.format(msg, args)
-        project.logger.error("[ImplementsPlugin]:${text}")
-    }
-
     override fun getName(): String = "ModulePlugin"
 
     override fun getInputTypes(): MutableSet<QualifiedContent.ContentType> = TransformManager.CONTENT_JARS
@@ -40,10 +30,9 @@ class ModulePluginTransform(private val project: Project) : Transform() {
 
     override fun transform(transformInvocation: TransformInvocation) {
         super.transform(transformInvocation)
-        val time1 = System.currentTimeMillis()
-        log("$this .....transform")
+        val now = System.currentTimeMillis()
 
-        val outputProvider: TransformOutputProvider = transformInvocation.outputProvider
+        val outputProvider = transformInvocation.outputProvider
         outputProvider.deleteAll()
 
         val classPool = ClassPool.getDefault()
@@ -52,7 +41,7 @@ class ModulePluginTransform(private val project: Project) : Transform() {
         // 记录所有的符合扫描条件的记录
         val implementsList = mutableListOf<Entry>()
         // ImplementsManager 注解所在的jar文件
-        var implementsManagerJar: JarInput? = null
+        var managerJar: JarInput? = null
 
         // 扫描所有的文件
         transformInvocation.inputs.forEach { input ->
@@ -64,15 +53,16 @@ class ModulePluginTransform(private val project: Project) : Transform() {
                 dir.file.copyRecursively(dst)
 
                 project.fileTree(dst).forEach {
-                    var clazzPath = it.absolutePath.replace(dst.absolutePath, "")
-                    clazzPath = clazzPath.replace("/", ".").substring(1)
-                    if (clazzPath.endsWith(".class")) {
-                        clazzPath = clazzPath.substring(0, clazzPath.length - 6)
-                        val clazz: CtClass = classPool.get(clazzPath)
+                    var path = it.absolutePath.replace(dst.absolutePath, "").replace("/", ".").substring(1)
+                    if (path.endsWith(".class")) {
+                        path = path.substring(0, path.length - 6)
+                        val clazz: CtClass = classPool.get(path)
                         // 如果class中的类包含注解则先收集起来
-                        val annotation = clazz.getAnnotation(Implements::class.java) as Implements?
-                        if (annotation != null) {
-                            implementsList.add(Entry(annotation, clazz))
+                        kotlin.runCatching {
+                            val an = clazz.getAnnotation(Implements::class.java) as Implements?
+                            if (an != null) {
+                                implementsList.add(Entry(an, clazz))
+                            }
                         }
                     }
                 }
@@ -80,8 +70,8 @@ class ModulePluginTransform(private val project: Project) : Transform() {
             input.jarInputs.forEach { jar ->
                 classPool.appendClassPath(jar.file.absolutePath)
 
-                if (implementsManagerJar == null && isImplementsManager(jar.file)) {
-                    implementsManagerJar = jar
+                if (managerJar == null && PluginKit.isImplementsManager(jar.file)) {
+                    managerJar = jar
                 } else {
                     val dst = outputProvider.getContentLocation(jar.name, jar.contentTypes, jar.scopes, Format.JAR)
                     dst.safeDelete()
@@ -92,15 +82,15 @@ class ModulePluginTransform(private val project: Project) : Transform() {
 
                     // 如果jar中的class中的类包含注解则先收集起来
                     while (entries.hasMoreElements()) {
-                        val jarEntry = entries.nextElement()
-                        var clazzPath = jarEntry.name.replace("/", ".")
-                        if (clazzPath.endsWith(".class")) {
-                            clazzPath = clazzPath.substring(0, clazzPath.length - 6)
-                            val clazz = classPool.get(clazzPath)
+                        val entry = entries.nextElement()
+                        var path = entry.name.replace("/", ".")
+                        if (path.endsWith(".class")) {
+                            path = path.substring(0, path.length - 6)
+                            val clazz = classPool.get(path)
                             kotlin.runCatching {
-                                val annotation = clazz.getAnnotation(Implements::class.java) as Implements?
-                                if (annotation != null) {
-                                    implementsList.add(Entry(annotation, clazz))
+                                val an = clazz.getAnnotation(Implements::class.java) as Implements?
+                                if (an != null) {
+                                    implementsList.add(Entry(an, clazz))
                                 }
                             }
                         }
@@ -109,28 +99,12 @@ class ModulePluginTransform(private val project: Project) : Transform() {
             }
         }
 
-        log("implementsManagerJar = $implementsManagerJar")
+        project.logger.info("implementsManagerJar = $managerJar")
+        val config = parseConfig(implementsList)
+        project.logger.info("config = $config")
 
-        val config = linkedMapOf<String, String>()
-
-        implementsList.forEach {
-            val str = it.anImplements.toString()
-            log("anImplements =" + it.anImplements)
-            val parent =
-                str.substring(str.indexOf("(") + 1, str.indexOf(")")).replace("parent=", "").replace(".class", "")
-            log("parent =$parent, sub =" + it.ctClass.name)
-
-            // 收集所有的接口以及实现类的路径
-            config[parent] = it.ctClass.name
-        }
-
-        log("config = $config")
-
-        val time2 = System.currentTimeMillis()
-
-        if (implementsManagerJar != null) {
-            val implementsManagerCtClass = classPool.get(IMPLEMENTS_MANAGER_NAME)
-            log("implementsManagerCtClass = $implementsManagerCtClass")
+        if (managerJar != null) {
+            val managerCtClass = classPool.get(Consts.IMPLEMENTS_MANAGER_NAME)
 
             // 修改class，在class中插入静态代码块，做初始化
             val body = mutableListOf<String>()
@@ -141,46 +115,52 @@ class ModulePluginTransform(private val project: Project) : Transform() {
             }
             body.add("}")
 
-            log("body = " + body.joinToString("\n"))
+            project.logger.info("body = " + body.joinToString("\n"))
 
-            implementsManagerCtClass.makeClassInitializer().setBody(body.joinToString("\n"))
+            managerCtClass.makeClassInitializer().setBody(body.joinToString("\n"))
 
-            val jar = implementsManagerJar!!
+            val jar = managerJar!!
             val dst = outputProvider.getContentLocation(jar.name, jar.contentTypes, jar.scopes, Format.JAR)
             project.logger.info(dst.absolutePath)
 
             // 修改完成后，完成后再写入到jar文件中
-            rewriteJar(implementsManagerJar!!.file, dst, IMPLEMENTS_MANAGER, implementsManagerCtClass.toBytecode())
+            rewriteJar(jar.file, dst, managerCtClass.toBytecode())
         }
 
-        log("time = " + (time2 - time1) / 1000)
+        project.logger.quiet("${name}.transform time = ${System.currentTimeMillis() - now}ms")
     }
 
-    fun isImplementsManager(file: File): Boolean {
-        return JarFile(file).getEntry(IMPLEMENTS_MANAGER) != null
+    private fun parseConfig(implementsList: MutableList<Entry>): LinkedHashMap<String, String> {
+        val config = linkedMapOf<String, String>()
+        implementsList.forEach {
+            val str = it.anImplements.toString()
+            val parent = str.substring(str.indexOf("(") + 1, str.indexOf(")"))
+                .replace("parent=", "").replace(".class", "")
+
+            // 收集所有的接口以及实现类的路径
+            config[parent] = it.ctClass.name
+        }
+        return config
     }
 
-    fun rewriteJar(src: File, dst: File, name: String, bytes: ByteArray) {
+
+    private fun rewriteJar(src: File, dst: File, bytes: ByteArray) {
+        val name = Consts.IMPLEMENTS_MANAGER
         dst.parentFile.mkdirs()
 
-        val jarOutput = JarOutputStream(FileOutputStream(dst))
-        val rcJarFile = JarFile(src)
-
-        jarOutput.putNextEntry(JarEntry(name))
-        jarOutput.write(bytes)
-
-        val entries = rcJarFile.entries()
-        while (entries.hasMoreElements()) {
-            val entry = entries.nextElement()
+        val target = JarOutputStream(FileOutputStream(dst))
+        val srcFile = JarFile(src)
+        for (entry in srcFile.entries()) {
             if (entry.name == name) {
+                target.putNextEntry(JarEntry(name))
+                target.write(bytes)
                 continue
             }
-            jarOutput.putNextEntry(entry)
-            val jarInput = rcJarFile.getInputStream(entry)
-            jarOutput.write(jarInput.readAllBytes())
-            jarInput.close()
+            val data = srcFile.getInputStream(entry).use { it.readAllBytes() }
+            target.putNextEntry(entry)
+            target.write(data)
         }
 
-        jarOutput.close()
+        target.close()
     }
 }
