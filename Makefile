@@ -1,0 +1,3 @@
+
+debug:
+	sh buildDebug.sh

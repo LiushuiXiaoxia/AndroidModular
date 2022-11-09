@@ -6,9 +6,9 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        jcenter()
+        mavenLocal()
         maven { url "https://jitpack.io" }
-        maven { url uri("${project.rootDir.absolutePath}/repo") }
+        // maven { url uri("${project.rootDir.absolutePath}/repo") }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$gradle_version"
@@ -27,9 +27,9 @@ buildscript {
 ext {
     // Sdk and tools
     minSdkVersion = 21
-    targetSdkVersion = 33
-    compileSdkVersion = 33
-    buildToolsVersion = '33.0.0'
+    targetSdkVersion = 32
+    compileSdkVersion = 32
+    buildToolsVersion = '32.0.0'
 
     // kotlin_version = '1.2.60'
     kotlin_version = '1.7.20'
@@ -56,10 +56,10 @@ ext {
 allprojects {
     repositories {
         google()
+        mavenLocal()
         mavenCentral()
-        jcenter()
         maven { url "https://jitpack.io" }
-        maven { url uri("${project.rootDir.absolutePath}/repo") }
+        // maven { url uri("${project.rootDir.absolutePath}/repo") }
     }
 }
 

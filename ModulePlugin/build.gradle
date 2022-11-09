@@ -5,6 +5,12 @@ apply plugin: 'kotlin' // version '1.5.31'
 
 buildscript {
     ext.kotlin_version = '1.5.31'
+    repositories {
+        mavenLocal()
+        google()
+        mavenCentral()
+    }
+
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
@@ -12,9 +18,9 @@ buildscript {
 
 repositories {
     mavenLocal()
-    maven { url uri("./../repo") }
     google()
     mavenCentral()
+    // maven { url uri("./../repo") }
 }
 
 sourceCompatibility = "8"
@@ -31,6 +37,7 @@ dependencies {
     implementation gradleApi()
     // implementation localGroovy()
 
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     compileOnly "com.android.tools:common:$version_android_tool"
@@ -50,7 +57,7 @@ gradlePlugin {
     plugins {
         xbuild {
             id = 'moduleplugin'
-            implementationClass = 'cn.mycommons.module_plugin.ImplementsPlugin'
+            implementationClass = 'cn.mycommons.module_plugin.ModulePlugin'
         }
     }
 }

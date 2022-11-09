@@ -14,7 +14,7 @@ version = "$LIB_VERSION"
 publishing {
     repositories {
         mavenLocal {
-            url = "${project.rootDir.absolutePath}/repo"
+            // url = "${project.rootDir.absolutePath}/repo"
         }
     }
     publications {

@@ -8,10 +8,12 @@ import org.gradle.api.Project
  * ImplementsPlugin <br></br>
  * Created by xiaqiulei on 2017-05-15.
  */
-class ImplementsPlugin : Plugin<Project> {
+class ModulePlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
         val app = project.extensions.getByType(AppExtension::class.java)
-        app.registerTransform(ImplementsTransform(project))
+        app.registerTransform(ModulePluginTransform(project))
+
+        // exitProcess(11)
     }
 }

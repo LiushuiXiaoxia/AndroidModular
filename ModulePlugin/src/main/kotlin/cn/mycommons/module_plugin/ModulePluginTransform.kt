@@ -1,8 +1,9 @@
 package cn.mycommons.module_plugin
 
+import cn.mycommons.module_plugin.util.safeDelete
 import cn.mycommons.modulebase.annotations.Implements
 import com.android.build.api.transform.*
-import com.google.common.collect.ImmutableSet
+import com.android.build.gradle.internal.pipeline.TransformManager
 import javassist.ClassPool
 import javassist.CtClass
 import org.gradle.api.Project
@@ -17,7 +18,7 @@ import java.util.jar.JarOutputStream
  * ImplementsTransform11 <br/>
  * Created by xiaqiulei on 2017-05-15.
  */
-class ImplementsTransform(val project: Project) : Transform() {
+class ModulePluginTransform(private val project: Project) : Transform() {
 
     companion object {
         const val IMPLEMENTS_MANAGER = "cn/mycommons/modulebase/annotations/ImplementsManager.class"
@@ -29,23 +30,13 @@ class ImplementsTransform(val project: Project) : Transform() {
         project.logger.error("[ImplementsPlugin]:${text}")
     }
 
-    override fun getName(): String = "ImplementsTransform"
+    override fun getName(): String = "ModulePlugin"
 
-    override fun getInputTypes(): Set<QualifiedContent.ContentType> {
-        return ImmutableSet.of(QualifiedContent.DefaultContentType.CLASSES)
-    }
+    override fun getInputTypes(): MutableSet<QualifiedContent.ContentType> = TransformManager.CONTENT_JARS
 
-    override fun getScopes(): MutableSet<in QualifiedContent.Scope> {
-        return mutableSetOf(
-            QualifiedContent.Scope.PROJECT,
-            QualifiedContent.Scope.PROJECT_LOCAL_DEPS,
-            QualifiedContent.Scope.SUB_PROJECTS,
-            QualifiedContent.Scope.SUB_PROJECTS_LOCAL_DEPS,
-            QualifiedContent.Scope.EXTERNAL_LIBRARIES)
-    }
+    override fun getScopes(): MutableSet<in QualifiedContent.Scope> = TransformManager.SCOPE_FULL_PROJECT
 
     override fun isIncremental() = false
-
 
     override fun transform(transformInvocation: TransformInvocation) {
         super.transform(transformInvocation)
@@ -55,7 +46,7 @@ class ImplementsTransform(val project: Project) : Transform() {
         val outputProvider: TransformOutputProvider = transformInvocation.outputProvider
         outputProvider.deleteAll()
 
-        val classPool = ClassPool()
+        val classPool = ClassPool.getDefault()
         classPool.appendSystemPath()
 
         // 记录所有的符合扫描条件的记录
@@ -64,17 +55,16 @@ class ImplementsTransform(val project: Project) : Transform() {
         var implementsManagerJar: JarInput? = null
 
         // 扫描所有的文件
-        transformInvocation.inputs.forEach {
-            it.directoryInputs.forEach { dir ->
+        transformInvocation.inputs.forEach { input ->
+            input.directoryInputs.forEach { dir ->
                 classPool.appendClassPath(dir.file.absolutePath)
                 val dst = outputProvider.getContentLocation(dir.name, dir.contentTypes, dir.scopes, Format.DIRECTORY)
-                // FileUtils.copyDirectory(it.file, dst)
-                // Files.copy(di.file, dst)
+                dst.safeDelete()
                 dst.mkdirs()
                 dir.file.copyRecursively(dst)
 
-                project.fileTree(dst).forEach { f ->
-                    var clazzPath = f.absolutePath.replace(dst.absolutePath, "")
+                project.fileTree(dst).forEach {
+                    var clazzPath = it.absolutePath.replace(dst.absolutePath, "")
                     clazzPath = clazzPath.replace("/", ".").substring(1)
                     if (clazzPath.endsWith(".class")) {
                         clazzPath = clazzPath.substring(0, clazzPath.length - 6)
@@ -87,30 +77,31 @@ class ImplementsTransform(val project: Project) : Transform() {
                     }
                 }
             }
-            it.jarInputs.forEach { ji ->
-                classPool.appendClassPath(ji.file.absolutePath)
+            input.jarInputs.forEach { jar ->
+                classPool.appendClassPath(jar.file.absolutePath)
 
-                if (implementsManagerJar == null && isImplementsManager(ji.file)) {
-                    implementsManagerJar = ji
+                if (implementsManagerJar == null && isImplementsManager(jar.file)) {
+                    implementsManagerJar = jar
                 } else {
-                    val dst = outputProvider.getContentLocation(ji.name, ji.contentTypes, ji.scopes, Format.JAR)
-                    // FileUtils.copyFile(it.file, dst)
-                    // Files.copy(ji.file, dst)
+                    val dst = outputProvider.getContentLocation(jar.name, jar.contentTypes, jar.scopes, Format.JAR)
+                    dst.safeDelete()
+                    jar.file.copyTo(dst)
 
-                    val jarFile = JarFile(ji.file)
+                    val jarFile = JarFile(jar.file)
                     val entries = jarFile.entries()
 
                     // 如果jar中的class中的类包含注解则先收集起来
                     while (entries.hasMoreElements()) {
                         val jarEntry = entries.nextElement()
-                        var clazzPath = jarEntry.getName()
-                        clazzPath = clazzPath.replace("/", ".")
+                        var clazzPath = jarEntry.name.replace("/", ".")
                         if (clazzPath.endsWith(".class")) {
                             clazzPath = clazzPath.substring(0, clazzPath.length - 6)
                             val clazz = classPool.get(clazzPath)
-                            val annotation = clazz.getAnnotation(Implements::class.java) as Implements?
-                            if (annotation != null) {
-                                implementsList.add(Entry(annotation, clazz))
+                            kotlin.runCatching {
+                                val annotation = clazz.getAnnotation(Implements::class.java) as Implements?
+                                if (annotation != null) {
+                                    implementsList.add(Entry(annotation, clazz))
+                                }
                             }
                         }
                     }
@@ -118,7 +109,7 @@ class ImplementsTransform(val project: Project) : Transform() {
             }
         }
 
-        log("implementsManagerJar = " + implementsManagerJar)
+        log("implementsManagerJar = $implementsManagerJar")
 
         val config = linkedMapOf<String, String>()
 
@@ -127,36 +118,32 @@ class ImplementsTransform(val project: Project) : Transform() {
             log("anImplements =" + it.anImplements)
             val parent =
                 str.substring(str.indexOf("(") + 1, str.indexOf(")")).replace("parent=", "").replace(".class", "")
-            log("parent =" + parent)
-            log("sub =" + it.ctClass.name)
+            log("parent =$parent, sub =" + it.ctClass.name)
 
             // 收集所有的接口以及实现类的路径
-            config.put(parent, it.ctClass.name)
+            config[parent] = it.ctClass.name
         }
 
-        log("config = " + config)
+        log("config = $config")
 
         val time2 = System.currentTimeMillis()
 
         if (implementsManagerJar != null) {
             val implementsManagerCtClass = classPool.get(IMPLEMENTS_MANAGER_NAME)
-            log("implementsManagerCtClass = " + implementsManagerCtClass)
+            log("implementsManagerCtClass = $implementsManagerCtClass")
 
             // 修改class，在class中插入静态代码块，做初始化
-            var body = "{\n"
-            body += "CONFIG =  java.util.HashMap();\n"
-
-//            for (Map. Entry<String, String> entry : config . entrySet ()) {
-//                body += "CONFIG.put(${entry.key}.class, ${entry.value}.class);\n"
-//            }
+            val body = mutableListOf<String>()
+            body.add("{")
+            body.add("CONFIG = new java.util.HashMap();")
             config.forEach {
-                body += "CONFIG.put(${it.key}.class, ${it.value}.class);\n"
+                body.add("CONFIG.put(${it.key}.class, ${it.value}.class);")
             }
+            body.add("}")
 
-            body += "}\n"
-            log("body = " + body)
+            log("body = " + body.joinToString("\n"))
 
-            implementsManagerCtClass.makeClassInitializer().setBody(body)
+            implementsManagerCtClass.makeClassInitializer().setBody(body.joinToString("\n"))
 
             val jar = implementsManagerJar!!
             val dst = outputProvider.getContentLocation(jar.name, jar.contentTypes, jar.scopes, Format.JAR)
