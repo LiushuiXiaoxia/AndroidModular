@@ -115,7 +115,7 @@ class ModulePluginTransform(private val project: Project) : Transform() {
             }
             body.add("}")
 
-            project.logger.info("body = " + body.joinToString("\n"))
+            project.logger.quiet("body = " + body.joinToString("\n"))
 
             managerCtClass.makeClassInitializer().setBody(body.joinToString("\n"))
 

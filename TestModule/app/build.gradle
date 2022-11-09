@@ -49,3 +49,5 @@ dependencies {
     implementation project(':TestModule:ModuleOrder')
     implementation project(':TestModule:ModuleShopping')
 }
+
+apply plugin: 'moduleplugin'
