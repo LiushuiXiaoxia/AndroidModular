@@ -1,20 +1,18 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
+
     defaultConfig {
-        applicationId "cn.mycommons.androidmodular"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-    }
-    dataBinding {
-        enabled = true
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
     buildTypes {
         release {
@@ -24,25 +22,15 @@ android {
     }
 }
 
-
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
-    api "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
-    api "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintlayoutVersion"
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.ext.kotlin_version"
 
-    kapt "com.android.databinding:compiler:$rootProject.ext.gradle_version"
+    implementation 'androidx.appcompat:appcompat:1.2.0'
 
     // common
     // compile project(':ModuleBase')
-    // compile project(':ModuleComponent')
-    // compile project(':ModuleService')
     api "cn.mycommons:ModuleBase:$LIB_VERSION"
-    api "cn.mycommons:ModuleComponent:$LIB_VERSION"
-    api "cn.mycommons:ModuleService:$LIB_VERSION"
-
-    // biz
-    api project(':ModuleUser')
-    api project(':ModuleOrder')
-    api project(':ModuleShopping')
 }
+
+// apply from: "${project.rootDir.absolutePath}/maven.gradle"

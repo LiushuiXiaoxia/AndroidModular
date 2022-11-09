@@ -6,7 +6,9 @@ include ':JavaBase'
 include ':ImplementsProcess'
 
 
-include ':TestPluginLib'
-include ':TestPluginApp'
+// include ':TestPlugin:TestPluginLib'
+// include ':TestPlugin:TestPluginApp'
 
-//include ':app', ':ModuleBase', ':ModuleService', ':ModuleComponent', ':ModuleUser', ':ModuleOrder', ':ModuleShopping'
+//include ':ModuleBase', ':ModuleService', ':ModuleComponent'
+//include ':ModuleUser', ':ModuleOrder', ':ModuleShopping'
+//include ':app'

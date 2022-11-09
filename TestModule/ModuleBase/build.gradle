@@ -24,12 +24,13 @@ android {
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
-
-    api "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.ext.kotlin_version"
-    // common
-    // compile project(':ModuleBase')
-    api "cn.mycommons:ModuleBase:$LIB_VERSION"
+
+//    api "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
+//    api "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintlayoutVersion"
+
+    // compile project(':JavaBase')
+    api "cn.mycommons:JavaBase:$LIB_VERSION"
 }
 
-apply from: "${project.rootDir.absolutePath}/maven.gradle"
+// apply from: "${project.rootDir.absolutePath}/maven.gradle"

@@ -8,9 +8,9 @@ set -v on
 
 set -e
 
-./gradlew :TestPluginApp:assembleDebug --profile --no-daemon --no-build-cache -s
+./gradlew :TestPlugin:TestPluginApp:assembleDebug --profile --no-daemon --no-build-cache -s
 #./gradlew :TestPluginApp:assembleDebug --profile --no-daemon --no-build-cache -s -w -Dorg.gradle.debug=true
 
 #exit
 adb uninstall cn.mycommons.testplugin || echo ""
-adb install -r TestPluginApp/build/outputs/apk/debug/TestPluginApp-debug.apk
+adb install -r TestPlugin/TestPluginApp/build/outputs/apk/debug/TestPluginApp-debug.apk

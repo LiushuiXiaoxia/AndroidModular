@@ -26,16 +26,9 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.ext.kotlin_version"
 
-    implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-
-//    api "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
-//    api "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintlayoutVersion"
-
-    // compile project(':JavaBase')
-    api "cn.mycommons:JavaBase:$LIB_VERSION"
+    // common
+    // api project(':ModuleBase')
+    api "cn.mycommons:ModuleBase:$LIB_VERSION"
 }
 
-apply from: "${project.rootDir.absolutePath}/maven.gradle"
+// apply from: "${project.rootDir.absolutePath}/maven.gradle"
