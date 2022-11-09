@@ -1,11 +1,11 @@
 apply plugin: 'java'
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
+sourceCompatibility = "8"
+targetCompatibility = "8"
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // compile project(':JavaBase')
-    compile "cn.mycommons:JavaBase:$LIB_VERSION"
+    implementation "cn.mycommons:JavaBase"
 }

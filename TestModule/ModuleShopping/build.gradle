@@ -1,0 +1,39 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    api fileTree(dir: 'libs', include: ['*.jar'])
+//    api "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
+//    api "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintlayoutVersion"
+//    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.ext.kotlin_version"
+
+    // common
+    implementation project(':TestModule:ModuleBase')
+    implementation project(':TestModule:ModuleComponent')
+    implementation project(':TestModule:ModuleService')
+
+//    api "cn.mycommons:ModuleBase:$LIB_VERSION"
+//    api "cn.mycommons:ModuleComponent:$LIB_VERSION"
+//    api "cn.mycommons:ModuleService:$LIB_VERSION"
+}

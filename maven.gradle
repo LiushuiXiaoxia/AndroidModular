@@ -1,12 +1,25 @@
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 group = 'cn.mycommons'
 version = "$LIB_VERSION"
 
-uploadArchives {
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            repository(url: uri("${project.rootDir.absolutePath}/repo"))
+//        }
+//    }
+//}
+
+publishing {
     repositories {
-        mavenDeployer {
-            repository(url: uri("${project.rootDir.absolutePath}/repo"))
+        mavenLocal {
+            // url = "${project.rootDir.absolutePath}/repo"
+        }
+    }
+    publications {
+        maven(MavenPublication) {
+            from components.java
         }
     }
 }

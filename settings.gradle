@@ -1,10 +1,16 @@
-include ':JavaBase'
-include ':app', ':ModuleBase', ':ModuleService', ':ModuleComponent', ':ModuleUser', ':ModuleOrder', ':ModuleShopping'
-include ':ImplementsProcess', ':buildSrc'
-include ':TestPlugin', ':TestPluginLib'
+includeBuild('JavaBase')
 
-
-try {
-    apply from: "./module.gradle"
-} catch (e) {
+if (Boolean.parseBoolean(PLUGIN_DEV)) {
+    includeBuild("ModulePlugin")
 }
+
+include ':ImplementsProcess'
+
+
+include ':TestPlugin:TestPluginLib'
+include ':TestPlugin:TestPluginApp'
+
+
+include ':TestModule:ModuleBase', ':TestModule:ModuleService', ':TestModule:ModuleComponent'
+include ':TestModule:ModuleUser', ':TestModule:ModuleOrder', ':TestModule:ModuleShopping'
+include ':TestModule:app'
