@@ -1,0 +1,56 @@
+apply plugin: 'java'
+// apply plugin: 'groovy'
+apply plugin: 'java-gradle-plugin'
+apply plugin: 'kotlin' // version '1.5.31'
+
+buildscript {
+    ext.kotlin_version = '1.5.31'
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+repositories {
+    mavenLocal()
+    maven { url uri("./../repo") }
+    google()
+    mavenCentral()
+}
+
+sourceCompatibility = "8"
+targetCompatibility = "8"
+
+def version_build_gradle = "7.0.4"
+def version_android_tool = "30.0.3"
+
+group "cn.mycommons"
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation gradleApi()
+    // implementation localGroovy()
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    compileOnly "com.android.tools:common:$version_android_tool"
+    compileOnly "com.android.tools:sdk-common:$version_android_tool"
+    compileOnly "com.android.tools:annotations:$version_android_tool"
+    compileOnly "com.android.tools.build:gradle:$version_build_gradle"
+    // implementation "com.android.tools.build:gradle:7.0.4"
+    // compileOnly 'com.google.guava:guava:31.0.1-jre'
+
+    implementation 'org.javassist:javassist:3.20.0-GA'
+
+    // compile project(':JavaBase')
+    implementation "cn.mycommons:JavaBase:0.4"
+}
+
+gradlePlugin {
+    plugins {
+        xbuild {
+            id = 'moduleplugin'
+            implementationClass = 'cn.mycommons.module_plugin.ImplementsPlugin'
+        }
+    }
+}

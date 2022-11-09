@@ -1,19 +1,23 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.2.60'
-    ext.gradle_version = '3.1.4'
+    ext.kotlin_version = '1.7.20'
+    ext.gradle_version = '7.3.1'
     repositories {
         google()
         mavenCentral()
         jcenter()
         maven { url "https://jitpack.io" }
-        // maven { url uri("${project.rootDir.absolutePath}/repo") }
+        maven { url uri("${project.rootDir.absolutePath}/repo") }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$gradle_version"
         // classpath "cn.mycommons:ImplementsTransformPlugin:$LIB_VERSION"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+        if (Boolean.parseBoolean(PLUGIN_DEV)) {
+            classpath "cn.mycommons:ModulePlugin"
+        }
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -22,12 +26,13 @@ buildscript {
 
 ext {
     // Sdk and tools
-    minSdkVersion = 15
-    targetSdkVersion = 27
-    compileSdkVersion = 27
-    buildToolsVersion = '27.0.3'
+    minSdkVersion = 21
+    targetSdkVersion = 33
+    compileSdkVersion = 33
+    buildToolsVersion = '33.0.0'
 
-    kotlin_version = '1.2.60'
+    // kotlin_version = '1.2.60'
+    kotlin_version = '1.7.20'
 
     // App dependencies
     supportLibraryVersion = '27.1.1'
