@@ -1,6 +1,7 @@
-package cn.mycommons.testplugin
+package cn.mycommons.testplugin.api.impl
 
 import cn.mycommons.modulebase.annotations.Implements
+import cn.mycommons.testplugin.api.IApi
 
 /**
  * ApiImpl <br></br>

@@ -107,16 +107,13 @@ class ModulePluginTransform(private val project: Project) : Transform() {
             val managerCtClass = classPool.get(Consts.IMPLEMENTS_MANAGER_NAME)
 
             // 修改class，在class中插入静态代码块，做初始化
-            val body = mutableListOf<String>()
-            body.add("{")
-            body.add("CONFIG = new java.util.HashMap();")
-            config.forEach {
-                body.add("CONFIG.put(${it.key}.class, ${it.value}.class);")
-            }
-            body.add("}")
+            val body = genMethodBody(config)
 
             project.logger.quiet("body = " + body.joinToString("\n"))
 
+            if (managerCtClass.isFrozen) {
+                managerCtClass.defrost()
+            }
             managerCtClass.makeClassInitializer().setBody(body.joinToString("\n"))
 
             val jar = managerJar!!
@@ -125,9 +122,21 @@ class ModulePluginTransform(private val project: Project) : Transform() {
 
             // 修改完成后，完成后再写入到jar文件中
             rewriteJar(jar.file, dst, managerCtClass.toBytecode())
+            project.logger.quiet("dst = $dst")
         }
 
         project.logger.quiet("${name}.transform time = ${System.currentTimeMillis() - now}ms")
+    }
+
+    private fun genMethodBody(config: Map<String, String>): List<String> {
+        return mutableListOf<String>().apply {
+            add("{")
+            add("\tCONFIG = new java.util.HashMap();")
+            config.forEach {
+                add("\tCONFIG.put(${it.key}.class, ${it.value}.class);")
+            }
+            add("}")
+        }
     }
 
     private fun parseConfig(implementsList: MutableList<Entry>): LinkedHashMap<String, String> {

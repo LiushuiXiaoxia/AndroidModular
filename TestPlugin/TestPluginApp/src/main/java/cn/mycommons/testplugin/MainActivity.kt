@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import cn.mycommons.modulebase.annotations.ImplementsManager.getImplementsClass
+import cn.mycommons.testplugin.api.IApi
 import cn.mycommons.testpluginlib.ITest
 
 class MainActivity : AppCompatActivity() {

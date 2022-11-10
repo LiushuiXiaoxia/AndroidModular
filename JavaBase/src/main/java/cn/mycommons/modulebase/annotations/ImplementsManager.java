@@ -11,7 +11,6 @@ public class ImplementsManager {
 
     private static final Map<Class, Class> CONFIG = new HashMap<>();
 
-
     public static Class getImplementsClass(Class parent) {
         return CONFIG.get(parent);
     }

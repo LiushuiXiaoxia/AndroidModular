@@ -1,4 +1,4 @@
-package cn.mycommons.testplugin
+package cn.mycommons.testplugin.api
 
 /**
  * IApi <br></br>

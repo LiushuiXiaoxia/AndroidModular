@@ -1,6 +1,7 @@
-package cn.mycommons.testpluginlib
+package cn.mycommons.testpluginlib.impl
 
 import cn.mycommons.modulebase.annotations.Implements
+import cn.mycommons.testpluginlib.ITest
 
 /**
  * TestImpl <br></br>
