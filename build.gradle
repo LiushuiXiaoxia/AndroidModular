@@ -2,7 +2,7 @@
 
 buildscript {
     ext.kotlin_version = '1.7.20'
-    ext.gradle_version = '7.3.1'
+    ext.gradle_version = '7.4.1'
     repositories {
         google()
         mavenCentral()
