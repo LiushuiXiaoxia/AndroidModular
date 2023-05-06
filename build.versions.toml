@@ -1,0 +1,35 @@
+[versions]
+kotlin = "1.7.20"
+androidAgp = "7.4.1"
+minSdkVersion = "21"
+compileSdkVersion = "32"
+targetSdkVersion = "32"
+
+[libraries]
+kotlinStdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+gson = "com.google.code.gson:gson:2.9.0"
+
+androidx-coreKtx = 'androidx.core:core-ktx:1.3.2'
+androidx-appcompat = 'androidx.appcompat:appcompat:1.2.0'
+androidx-material = 'com.google.android.material:material:1.3.0'
+androidx-constraintlayout = 'androidx.constraintlayout:constraintlayout:2.0.4'
+
+okhttp = "com.squareup.okhttp3:okhttp:3.14.9"
+okhttp-logging = "com.squareup.okhttp3:logging-interceptor:3.14.9"
+leakcanary = 'com.squareup.leakcanary:leakcanary-android:2.7'
+
+# for test
+junit = 'junit:junit:4.13.2'
+androidx-junit = 'androidx.test.ext:junit:1.1.3'
+androidx-espresso = 'androidx.test.espresso:espresso-core:3.4.0'
+
+[bundles]
+androidx = ['androidx-coreKtx', 'androidx-appcompat', 'androidx-material', 'androidx-constraintlayout']
+okhttp = ['okhttp', 'okhttp-logging']
+
+# for test
+test = ['androidx-junit', 'androidx-espresso']
+
+[plugins]
+kotlinBuild = { id = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+androidBuild = { id = "com.android.tools.build:gradle", version.ref = "androidAgp" }

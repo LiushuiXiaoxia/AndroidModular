@@ -14,3 +14,5 @@ set -e
 #exit
 adb uninstall cn.mycommons.testplugin || echo ""
 adb install -r TestPlugin/TestPluginApp/build/outputs/apk/debug/TestPluginApp-debug.apk
+sleep 1
+adb shell am start -n cn.mycommons.testplugin/.MainActivity

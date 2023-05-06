@@ -1,8 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.7.20'
-    ext.gradle_version = '7.4.1'
+
     repositories {
         google()
         mavenCentral()
@@ -10,48 +9,19 @@ buildscript {
         maven { url "https://jitpack.io" }
         // maven { url uri("${project.rootDir.absolutePath}/repo") }
     }
+
     dependencies {
-        classpath "com.android.tools.build:gradle:$gradle_version"
+        classpath libs.plugins.androidBuild.get().toString()
+        classpath libs.plugins.kotlinBuild.get().toString()
+        // classpath "com.android.tools.build:gradle:$gradle_version"
+        // classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // classpath "cn.mycommons:ImplementsTransformPlugin:$LIB_VERSION"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         if (Boolean.parseBoolean(PLUGIN_DEV)) {
             classpath "cn.mycommons:ModulePlugin"
         }
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
     }
 }
-
-ext {
-    // Sdk and tools
-    minSdkVersion = 21
-    targetSdkVersion = 32
-    compileSdkVersion = 32
-    buildToolsVersion = '32.0.0'
-
-    // kotlin_version = '1.2.60'
-    kotlin_version = '1.7.20'
-
-    // App dependencies
-    supportLibraryVersion = '27.1.1'
-    constraintlayoutVersion = '1.1.2'
-    gsonVersion = '2.8.0'
-
-    dagger2Version = '2.8'
-    rxjava2Version = '2.0.6'
-    rxandroidVersion = '2.0.1'
-    butterKnifeVersion = '8.5.1'
-    timberVersion = '4.5.1'
-    debugDBVersion = '1.0.0'
-
-    //Test dependencies
-    junitVersion = '4.12'
-    espressoVersion = '2.2.2'
-    mockitoVersion = '2.7.1'
-}
-
 
 allprojects {
     repositories {

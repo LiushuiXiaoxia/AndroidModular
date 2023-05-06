@@ -1,3 +1,9 @@
+dependencyResolutionManagement {
+    versionCatalogs {
+        libs { from(files("build.versions.toml")) }
+    }
+}
+
 includeBuild('JavaBase')
 
 if (Boolean.parseBoolean(PLUGIN_DEV)) {

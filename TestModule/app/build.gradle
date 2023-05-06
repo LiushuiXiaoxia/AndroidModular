@@ -4,13 +4,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
 
     defaultConfig {
         applicationId "cn.mycommons.androidmodular"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion libs.versions.minSdkVersion.get().toInteger()
+        targetSdkVersion libs.versions.targetSdkVersion.get().toInteger()
         versionCode 1
         versionName "1.0"
     }
@@ -30,10 +29,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    // implementation "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
-    // implementation "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintlayoutVersion"
-    // implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.ext.kotlin_version"
-
     // kapt "com.android.databinding:compiler:$rootProject.ext.gradle_version"
 
     // common
