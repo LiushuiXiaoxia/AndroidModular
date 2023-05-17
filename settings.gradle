@@ -4,13 +4,15 @@ dependencyResolutionManagement {
     }
 }
 
-includeBuild('JavaBase')
+includeBuild('common/JavaBase')
 
 if (Boolean.parseBoolean(PLUGIN_DEV)) {
-    includeBuild("ModulePlugin")
+    includeBuild("plugin/ModulePlugin") {
+        name = "ModulePlugin"
+    }
 }
 
-include ':ImplementsProcess'
+include ':common:ImplementsProcess'
 
 
 include ':TestPlugin:TestPluginLib'
