@@ -55,7 +55,7 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        xbuild {
+        moduleplugin {
             id = 'moduleplugin'
             implementationClass = 'cn.mycommons.module_plugin.ModulePlugin'
         }
