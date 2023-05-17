@@ -1,4 +1,4 @@
-package cn.mycommons.module_plugin.ksp
+package cn.mycommons.module_plugin
 
 import cn.mycommons.modulebase.annotations.Implements
 import javassist.CtClass

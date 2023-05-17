@@ -1,4 +1,4 @@
-package cn.mycommons.module_plugin.ksp
+package cn.mycommons.module_plugin
 
 import java.io.File
 import java.util.jar.JarFile

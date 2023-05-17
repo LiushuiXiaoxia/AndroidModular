@@ -1,4 +1,4 @@
-package cn.mycommons.module_plugin.ksp
+package cn.mycommons.module_plugin
 
 object Consts {
     const val IMPLEMENTS_MANAGER = "cn/mycommons/modulebase/annotations/ImplementsManager.class"

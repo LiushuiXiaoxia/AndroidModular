@@ -1,6 +1,6 @@
-package cn.mycommons.module_plugin.ksp
+package cn.mycommons.module_plugin
 
-import cn.mycommons.module_plugin.ksp.util.safeDelete
+import cn.mycommons.module_plugin.util.safeDelete
 import cn.mycommons.modulebase.annotations.Implements
 import com.android.build.api.transform.*
 import com.android.build.gradle.internal.pipeline.TransformManager
@@ -18,9 +18,9 @@ import java.util.jar.JarOutputStream
  * ImplementsTransform11 <br/>
  * Created by xiaqiulei on 2017-05-15.
  */
-class ModuleKspPluginTransform(private val project: Project) : Transform() {
+class ModulePluginTransform(private val project: Project) : Transform() {
 
-    override fun getName(): String = "ModulePluginKsp"
+    override fun getName(): String = "ModulePlugin"
 
     override fun getInputTypes(): MutableSet<QualifiedContent.ContentType> = TransformManager.CONTENT_JARS
 
