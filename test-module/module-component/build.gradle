@@ -1,0 +1,32 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
+
+    defaultConfig {
+        minSdkVersion libs.versions.minSdkVersion.get().toInteger()
+        targetSdkVersion libs.versions.targetSdkVersion.get().toInteger()
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    api libs.kotlinStdlib.get()
+    implementation libs.bundles.androidx.get()
+
+    // common
+    implementation project(':test-module:module-base')
+    // api "cn.mycommons:ModuleBase:$LIB_VERSION"
+}
+
+// apply from: "${project.rootDir.absolutePath}/maven.gradle"

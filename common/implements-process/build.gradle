@@ -1,0 +1,11 @@
+apply plugin: 'java'
+
+sourceCompatibility = "8"
+targetCompatibility = "8"
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // compile project(':java-base')
+    implementation "cn.mycommons:java-base"
+}

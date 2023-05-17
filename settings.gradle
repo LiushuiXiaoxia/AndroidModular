@@ -4,21 +4,20 @@ dependencyResolutionManagement {
     }
 }
 
-includeBuild('common/JavaBase')
+includeBuild('common/java-base')
 
 if (Boolean.parseBoolean(PLUGIN_DEV)) {
-    includeBuild("plugin/ModulePlugin") {
-        name = "ModulePlugin"
-    }
+    includeBuild("plugin/module-plugin")
+    includeBuild("plugin/module-plugin-ksp")
 }
 
-include ':common:ImplementsProcess'
+include ':common:implements-process'
 
 
-include ':TestPlugin:TestPluginLib'
-include ':TestPlugin:TestPluginApp'
+include ':test-plugin:test-plugin-lib'
+include ':test-plugin:test-plugin-app'
 
 
-include ':TestModule:ModuleBase', ':TestModule:ModuleService', ':TestModule:ModuleComponent'
-include ':TestModule:ModuleUser', ':TestModule:ModuleOrder', ':TestModule:ModuleShopping'
-include ':TestModule:app'
+include ':test-module:module-base', ':test-module:module-service', ':test-module:module-component'
+include ':test-module:module-user', ':test-module:module-order', ':test-module:module-shopping'
+include ':test-module:app'

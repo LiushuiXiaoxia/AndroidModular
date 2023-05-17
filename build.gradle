@@ -18,7 +18,8 @@ buildscript {
         // classpath "cn.mycommons:ImplementsTransformPlugin:$LIB_VERSION"
 
         if (Boolean.parseBoolean(PLUGIN_DEV)) {
-            classpath "cn.mycommons:ModulePlugin"
+            classpath "cn.mycommons:module-plugin"
+            classpath "cn.mycommons:module-plugin-ksp"
         }
     }
 }
