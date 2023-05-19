@@ -21,9 +21,7 @@ class ModuleProcessorProvider : SymbolProcessorProvider {
         PluginKit.setup(pkg, name)
 
         return ModuleSymbolProcessor(
-            environment.codeGenerator,
-            environment.logger,
-            environment.options
+            environment.codeGenerator
         )
     }
 }

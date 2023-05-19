@@ -1,6 +1,7 @@
 package cn.mycommons.androidmodular.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import cn.mycommons.androidmodular.InjectHelper
@@ -9,8 +10,11 @@ import cn.mycommons.androidmodular.RouterHelper
 import cn.mycommons.androidmodular.databinding.ActivityMainBinding
 import cn.mycommons.modulebase.base.BaseActivity
 import cn.mycommons.moduleservice.IUserService
+import cn.mycommons.moduleuser.UserActivity__RouterInject
 
 class MainActivity : BaseActivity() {
+
+    val TAG = "MainActivity"
 
     private lateinit var binding: ActivityMainBinding
 
@@ -25,5 +29,7 @@ class MainActivity : BaseActivity() {
             }
         }
         binding.btnGotoUser.setOnClickListener { RouterHelper.dispatch(getContext(), "app://user") }
+
+        Log.i(TAG, "onCreate: ${UserActivity__RouterInject::class.java}")
     }
 }

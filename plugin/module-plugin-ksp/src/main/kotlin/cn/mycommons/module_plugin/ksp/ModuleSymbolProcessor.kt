@@ -6,51 +6,38 @@ import cn.mycommons.module_plugin.ksp.util.LogKit
 import cn.mycommons.modulebase.annotations.Router
 import cn.mycommons.modulebase.annotations.RouterParam
 import com.google.devtools.ksp.processing.CodeGenerator
-import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
+import java.util.concurrent.atomic.AtomicInteger
 
-class ModuleSymbolProcessor(
-    private val codeGenerator: CodeGenerator,
-    private val logger: KSPLogger,
-    private val options: Map<String, String>,
-) : SymbolProcessor {
+class ModuleSymbolProcessor(private val codeGenerator: CodeGenerator) : SymbolProcessor {
+
+    private val idx = AtomicInteger(0)
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        // val symbols = resolver.getSymbolsWithAnnotation(RouterParam::class.java.name).filterIsInstance<KSClassDeclaration>()
+        LogKit.warn("~~~ ${KspConsts.PLUGIN_NAME} process(${idx.getAndIncrement()}) ~~~")
+
+        resolver.getAllFiles().forEach {
+            LogKit.warn("files: ${it.fileName}")
+        }
+
         val list = resolver.getSymbolsWithAnnotation(Router::class.java.name).filterIsInstance<KSClassDeclaration>()
         RouterProcess(codeGenerator).process(list)
 
-//        resolver.getAllFiles().forEach {
-//            LogKit.warn("files: $it")
-//            LogKit.warn("declarations: ${it.declarations.toList()}")
-//            // it.accept(RouterParamKSVisitorVoid(), Unit)
-//        }
-
-        val list2 = resolver.getSymbolsWithAnnotation(RouterParam::class.java.name).map { it.parent }
-            .filterNotNull()
-            .filter { it is KSClassDeclaration }
+        val list2 = resolver.getSymbolsWithAnnotation(RouterParam::class.java.name)
+        val list3 = list2.map { it.parent }
+            .filter { it != null && it is KSClassDeclaration }
+            .map { it as KSClassDeclaration }
             .distinct()
-
-
-        val list3 = list2.toList()
-            //.flatMap { it.annotations.toList() }
-            .map {
-                "${it.origin} ~ ${it.parent?.javaClass}"
-            }
-            .joinToString("\n")
-        LogKit.warn("list2 = ${list2.toList()}")
-        LogKit.warn("list3 = $list3")
-
-        RouterParamProcess(codeGenerator).process(list.toList())
+            .toList()
+        RouterParamProcess(codeGenerator).process(list3)
 
         return listOf()
     }
 
-
     override fun finish() {
-        LogKit.warn("========")
+        LogKit.warn("~~~ ${KspConsts.PLUGIN_NAME} finish ~~~")
     }
 }

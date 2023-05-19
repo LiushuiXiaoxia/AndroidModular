@@ -19,5 +19,8 @@ class UserActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user)
+
+        // for test
+        UserActivity__RouterInject.inject(this)
     }
 }

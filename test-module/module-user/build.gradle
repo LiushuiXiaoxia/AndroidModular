@@ -28,6 +28,21 @@ android {
     lintOptions {
         checkReleaseBuilds false
     }
+
+    // 让IDE识别KSP生成的代码
+    libraryVariants.all { variant ->
+        sourceSets {
+            getByName(variant.name) {
+                kotlin.srcDir("${buildDir}/generated/ksp/${variant.name}/kotlin")
+            }
+        }
+    }
+
+    kotlin {
+        sourceSets {
+            // main.kotlin.srcDirs += 'build/generated/ksp'
+        }
+    }
 }
 
 dependencies {

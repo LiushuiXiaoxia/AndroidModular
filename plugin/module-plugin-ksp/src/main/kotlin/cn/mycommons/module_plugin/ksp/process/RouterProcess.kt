@@ -28,11 +28,11 @@ class RouterProcess(private val codeGenerator: CodeGenerator) {
             }
         }
 
-        LogKit.warn("config = $configList")
         if (configList.isEmpty()) {
             return
         }
 
+        LogKit.warn("config = $configList")
         genRouterConfig(configList)
     }
 

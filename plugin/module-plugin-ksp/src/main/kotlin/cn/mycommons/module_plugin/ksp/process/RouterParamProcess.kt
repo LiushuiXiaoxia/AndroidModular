@@ -21,7 +21,7 @@ class RouterParamProcess(private val codeGenerator: CodeGenerator) {
         symbols.forEach {
             val fields = it.getAllProperties()
                 .filter { p ->
-                    LogKit.warn("p = $p, pa = ${p.annotations.toList()}")
+                    // LogKit.warn("p = $p, pa = ${p.annotations.toList()}")
                     p.annotations.any { a ->
                         a.shortName.asString() == RouterParam::class.java.simpleName
                     }
@@ -32,7 +32,7 @@ class RouterParamProcess(private val codeGenerator: CodeGenerator) {
                 }
                 .toList()
 
-            LogKit.warn("class: $it, fields = ${fields}")
+            LogKit.warn("class: $it, fields = $fields")
             genRouterParamInject(it, fields)
         }
     }
@@ -48,17 +48,24 @@ class RouterParamProcess(private val codeGenerator: CodeGenerator) {
         val os = codeGenerator.createNewFile(Dependencies(false), genPackageName, genClassName)
         val fs = FileSpec.builder(genPackageName, genClassName)
             .addType(
-                TypeSpec.classBuilder(genClassName)
+                TypeSpec.objectBuilder(genClassName)
                     .addFunction(
                         FunSpec.builder("inject")
-                            .addParameter("target", t)
+                            .addParameter("obj", t)
                             .addCode(genConfigMethodBody(fields))
+                            .addAnnotation(JvmStatic::class)
                             .build()
                     )
-                    .addKdoc("generate by router ksp").build()
-            ).apply {
-                // configList.forEach { addImport(it.clazzPackage, it.clazzName) }
-            }.build()
+                    .addFunction(
+                        FunSpec.builder("uninject")
+                            .addParameter("obj", t)
+                            .addCode("")
+                            .addAnnotation(JvmStatic::class)
+                            .build()
+                    )
+                    .addKdoc("generate by router ksp")
+                    .build()
+            ).build()
 
         os.bufferedWriter().use { fs.writeTo(it) }
     }
@@ -69,7 +76,7 @@ class RouterParamProcess(private val codeGenerator: CodeGenerator) {
         list.forEach {
             val name = it.annotation.arguments.firstOrNull { a -> a.name?.asString() == "name" }?.value
             val item = """
-                target.${it.field.simpleName.asString()} = target.intent.getStringExtra("$name")
+                obj.${it.field.simpleName.asString()} = obj.intent.getStringExtra("$name")
             """.trimIndent()
             sb.append(item).append("\n")
         }
