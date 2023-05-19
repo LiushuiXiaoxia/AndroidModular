@@ -46,4 +46,3 @@ dependencies {
 }
 
 apply plugin: 'moduleplugin'
-apply plugin: 'moduleplugin-ksp'

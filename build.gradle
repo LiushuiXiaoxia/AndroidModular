@@ -19,7 +19,6 @@ buildscript {
 
         if (Boolean.parseBoolean(PLUGIN_DEV)) {
             classpath "cn.mycommons:module-plugin"
-            classpath "cn.mycommons:module-plugin-ksp"
         }
     }
 }
