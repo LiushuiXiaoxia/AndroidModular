@@ -16,7 +16,7 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.typeNameOf
 
-class RouterProcess(private val codeGenerator: CodeGenerator) {
+class ModuleConfigProcess(private val codeGenerator: CodeGenerator) {
 
     fun process(routers: Sequence<KSClassDeclaration>, services: Sequence<KSClassDeclaration>) {
         val routerList = mutableListOf<RouterConfig>()
@@ -76,26 +76,27 @@ class RouterProcess(private val codeGenerator: CodeGenerator) {
 
     @OptIn(ExperimentalStdlibApi::class)
     private fun genMethodRouter(list: List<RouterConfig>): FunSpec {
-        val sb = StringBuilder()
-        sb.append("val map = HashMap<String, Class<*>>()").append("\n")
+        val lines = mutableListOf<String>()
+        lines.add("val map = HashMap<String, Class<*>>()")
         list.forEach {
             val item = """
                 map["${it.uri}"] = ${it.clazzPackage}.${it.clazzName}::class.java
             """.trimIndent()
-            sb.append(item).append("\n")
+            lines.add(item)
         }
-        sb.append("return map").append("\n")
+        lines.add("return map")
 
         return FunSpec.builder("router")
+            .addKdoc("router config")
+            .addCode(lines.joinToString("\n"))
             .returns(typeNameOf<Map<String, Class<*>>>())
-            .addCode(sb.toString())
             .build()
     }
 
     @OptIn(ExperimentalStdlibApi::class)
     private fun genMethodService(list: List<ServiceConfig>): FunSpec {
-        val sb = StringBuilder()
-        sb.append("val map = HashMap<Class<*>, Class<*>>()").append("\n")
+        val lines = mutableListOf<String>()
+        lines.add("val map = HashMap<Class<*>, Class<*>>()")
         list.forEach {
             val parent =
                 "${it.parent.declaration.packageName.asString()}.${it.parent.declaration.simpleName.asString()}"
@@ -104,13 +105,14 @@ class RouterProcess(private val codeGenerator: CodeGenerator) {
             val item = """
                 map[${parent}::class.java] = ${self}::class.java
             """.trimIndent()
-            sb.append(item).append("\n")
+            lines.add(item)
         }
-        sb.append("return map").append("\n")
+        lines.add("return map")
 
         return FunSpec.builder("service")
+            .addKdoc("module config")
+            .addCode(lines.joinToString("\n"))
             .returns(typeNameOf<Map<Class<*>, Class<*>>>())
-            .addCode(sb.toString())
             .build()
     }
 }

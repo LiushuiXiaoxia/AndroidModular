@@ -1,7 +1,7 @@
 package cn.mycommons.module_plugin.ksp
 
 import cn.mycommons.module_plugin.ksp.process.RouterParamProcess
-import cn.mycommons.module_plugin.ksp.process.RouterProcess
+import cn.mycommons.module_plugin.ksp.process.ModuleConfigProcess
 import cn.mycommons.module_plugin.ksp.util.LogKit
 import cn.mycommons.modulebase.annotations.Implements
 import cn.mycommons.modulebase.annotations.Router
@@ -26,7 +26,7 @@ class ModuleSymbolProcessor(private val codeGenerator: CodeGenerator) : SymbolPr
 
         val routerList = resolver.getSymbolsWithAnnotation(Router::class.java.name).filterIsInstance<KSClassDeclaration>()
         val serviceList = resolver.getSymbolsWithAnnotation(Implements::class.java.name).filterIsInstance<KSClassDeclaration>()
-        RouterProcess(codeGenerator).process(routerList, serviceList)
+        ModuleConfigProcess(codeGenerator).process(routerList, serviceList)
 
         val list2 = resolver.getSymbolsWithAnnotation(RouterParam::class.java.name)
         val list3 = list2.map { it.parent }
