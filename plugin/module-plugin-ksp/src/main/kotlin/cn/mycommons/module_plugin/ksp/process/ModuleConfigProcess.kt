@@ -47,21 +47,7 @@ class ModuleConfigProcess(private val codeGenerator: CodeGenerator) {
             return
         }
 
-        genRes()
-
         genRouterConfig(routerList, serviceList)
-    }
-
-    private fun genRes() {
-        val fs = codeGenerator.createNewFileByPath(
-            Dependencies(false),
-            "META-INF/module/${PluginKit.moduleName}.meta",
-            "json"
-        )
-        val map = mutableMapOf("hello" to "world")
-        fs.bufferedWriter().use {
-            it.write(GsonBuilder().setPrettyPrinting().create().toJson(map))
-        }
     }
 
     private fun genRouterConfig(
