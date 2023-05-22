@@ -36,6 +36,8 @@ class ModuleSymbolProcessor(private val codeGenerator: CodeGenerator) : SymbolPr
             .toList()
         RouterParamProcess(codeGenerator).process(list3)
 
+        LogKit.warn("generatedFile = ${codeGenerator.generatedFile}")
+
         return listOf()
     }
 

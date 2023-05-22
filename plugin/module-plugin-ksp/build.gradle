@@ -34,6 +34,7 @@ dependencies {
 
     implementation "cn.mycommons:java-base"
 
+    implementation "com.google.code.gson:gson:2.9.0"
     implementation "com.google.devtools.ksp:symbol-processing-api:1.7.20-1.0.8"
     implementation 'com.squareup:kotlinpoet:1.10.2'
 }

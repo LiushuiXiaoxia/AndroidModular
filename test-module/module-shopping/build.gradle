@@ -1,5 +1,8 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+plugins {
+    id("com.google.devtools.ksp") version "1.7.20-1.0.8"
+    id('com.android.library')
+    id('kotlin-android')
+}
 
 android {
     compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
@@ -22,6 +25,8 @@ android {
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
 
+    ksp('cn.mycommons:module-plugin-ksp')
+
     // common
     implementation project(':test-module:module-base')
     implementation project(':test-module:module-component')
@@ -30,4 +35,9 @@ dependencies {
 //    api "cn.mycommons:ModuleBase:$LIB_VERSION"
 //    api "cn.mycommons:ModuleComponent:$LIB_VERSION"
 //    api "cn.mycommons:ModuleService:$LIB_VERSION"
+}
+
+ksp {
+    arg("modulePackage", "cn.mycommons.moduleshopping")
+    arg("moduleName", "ModuleShopping")
 }

@@ -11,6 +11,7 @@ import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSType
+import com.google.gson.GsonBuilder
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.TypeSpec
@@ -49,7 +50,21 @@ class ModuleConfigProcess(private val codeGenerator: CodeGenerator) {
         LogKit.warn("routerList = $routerList")
         LogKit.warn("serviceList = $serviceList")
 
+        genRes()
+
         genRouterConfig(routerList, serviceList)
+    }
+
+    private fun genRes() {
+        val fs = codeGenerator.createNewFileByPath(
+            Dependencies(false),
+            "META-INF/module/${PluginKit.moduleName}.meta",
+            "json"
+        )
+        val map = mutableMapOf("hello" to "world")
+        fs.bufferedWriter().use {
+            it.write(GsonBuilder().setPrettyPrinting().create().toJson(map))
+        }
     }
 
     private fun genRouterConfig(
