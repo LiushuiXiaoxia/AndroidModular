@@ -19,7 +19,7 @@ import com.squareup.kotlinpoet.typeNameOf
 
 class ModuleConfigProcess(private val codeGenerator: CodeGenerator) {
 
-    fun process(routers: Sequence<KSClassDeclaration>, services: Sequence<KSClassDeclaration>) {
+    fun process(routers: List<KSClassDeclaration>, services: List<KSClassDeclaration>) {
         val routerList = mutableListOf<RouterConfig>()
         routers.forEach {
             val an = it.annotations.firstOrNull { a -> a.shortName.asString() == Router::class.java.simpleName }
@@ -43,12 +43,9 @@ class ModuleConfigProcess(private val codeGenerator: CodeGenerator) {
             }
         }
 
-        if (routerList.isEmpty()) {
+        if (routerList.isEmpty() && serviceList.isEmpty()) {
             return
         }
-
-        LogKit.warn("routerList = $routerList")
-        LogKit.warn("serviceList = $serviceList")
 
         genRes()
 
