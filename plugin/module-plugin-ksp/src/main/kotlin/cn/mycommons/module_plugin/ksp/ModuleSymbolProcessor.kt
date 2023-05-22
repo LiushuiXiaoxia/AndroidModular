@@ -3,6 +3,7 @@ package cn.mycommons.module_plugin.ksp
 import cn.mycommons.module_plugin.ksp.process.RouterParamProcess
 import cn.mycommons.module_plugin.ksp.process.RouterProcess
 import cn.mycommons.module_plugin.ksp.util.LogKit
+import cn.mycommons.modulebase.annotations.Implements
 import cn.mycommons.modulebase.annotations.Router
 import cn.mycommons.modulebase.annotations.RouterParam
 import com.google.devtools.ksp.processing.CodeGenerator
@@ -23,8 +24,9 @@ class ModuleSymbolProcessor(private val codeGenerator: CodeGenerator) : SymbolPr
             LogKit.warn("files: ${it.fileName}")
         }
 
-        val list = resolver.getSymbolsWithAnnotation(Router::class.java.name).filterIsInstance<KSClassDeclaration>()
-        RouterProcess(codeGenerator).process(list)
+        val routerList = resolver.getSymbolsWithAnnotation(Router::class.java.name).filterIsInstance<KSClassDeclaration>()
+        val serviceList = resolver.getSymbolsWithAnnotation(Implements::class.java.name).filterIsInstance<KSClassDeclaration>()
+        RouterProcess(codeGenerator).process(routerList, serviceList)
 
         val list2 = resolver.getSymbolsWithAnnotation(RouterParam::class.java.name)
         val list3 = list2.map { it.parent }
