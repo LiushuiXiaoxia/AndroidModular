@@ -18,7 +18,7 @@ class ModuleProcessorProvider : SymbolProcessorProvider {
             throw RuntimeException("project must be assign moduleName and modulePackage")
         }
 
-        PluginKit.setup(pkg, name)
+        PluginContextKit.setup(pkg, name)
 
         return ModuleSymbolProcessor(
             environment.codeGenerator

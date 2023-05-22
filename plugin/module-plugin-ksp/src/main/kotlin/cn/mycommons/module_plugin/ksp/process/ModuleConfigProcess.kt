@@ -1,17 +1,15 @@
 package cn.mycommons.module_plugin.ksp.process
 
 import cn.mycommons.module_plugin.ksp.KspConsts
-import cn.mycommons.module_plugin.ksp.PluginKit
+import cn.mycommons.module_plugin.ksp.PluginContextKit
 import cn.mycommons.module_plugin.ksp.model.RouterConfig
 import cn.mycommons.module_plugin.ksp.model.ServiceConfig
-import cn.mycommons.module_plugin.ksp.util.LogKit
 import cn.mycommons.modulebase.annotations.Implements
 import cn.mycommons.modulebase.annotations.Router
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSType
-import com.google.gson.GsonBuilder
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.TypeSpec
@@ -54,7 +52,7 @@ class ModuleConfigProcess(private val codeGenerator: CodeGenerator) {
         routerList: MutableList<RouterConfig>,
         serviceList: MutableList<ServiceConfig>,
     ) {
-        val genClassName = "${PluginKit.moduleName}__ModuleConfigGen"
+        val genClassName = "${PluginContextKit.moduleName}__ModuleConfigGen"
         val genPackageName = "${KspConsts.INTERNAL_PKG}.gen"
 
         val os = codeGenerator.createNewFile(Dependencies(false), genPackageName, genClassName)
