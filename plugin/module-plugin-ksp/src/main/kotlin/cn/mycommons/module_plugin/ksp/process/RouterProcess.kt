@@ -38,7 +38,7 @@ class RouterProcess(private val codeGenerator: CodeGenerator) {
 
     @OptIn(ExperimentalStdlibApi::class)
     private fun genRouterConfig(configList: MutableList<RouterConfig>) {
-        val genClassName = "${PluginKit.moduleName}__RouterConfig"
+        val genClassName = "${PluginKit.moduleName}__ModuleConfigGen"
         val genPackageName = "${KspConsts.INTERNAL_PKG}.gen"
 
         val os = codeGenerator.createNewFile(Dependencies(false), genPackageName, genClassName)
@@ -46,7 +46,7 @@ class RouterProcess(private val codeGenerator: CodeGenerator) {
             .addType(
                 TypeSpec.classBuilder(genClassName)
                     .addFunction(
-                        FunSpec.builder("config")
+                        FunSpec.builder("router")
                             .returns(typeNameOf<Map<String, Class<*>>>())
                             .addCode(genConfigMethodBody(configList))
                             .build()
