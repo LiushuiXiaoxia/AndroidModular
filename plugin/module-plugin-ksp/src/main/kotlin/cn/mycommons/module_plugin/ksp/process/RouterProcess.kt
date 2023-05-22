@@ -52,7 +52,6 @@ class RouterProcess(private val codeGenerator: CodeGenerator) {
         genRouterConfig(routerList, serviceList)
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
     private fun genRouterConfig(
         routerList: MutableList<RouterConfig>,
         serviceList: MutableList<ServiceConfig>,
@@ -64,19 +63,10 @@ class RouterProcess(private val codeGenerator: CodeGenerator) {
         val fs = FileSpec.builder(genPackageName, genClassName)
             .addType(
                 TypeSpec.classBuilder(genClassName)
-                    .addFunction(
-                        FunSpec.builder("router")
-                            .returns(typeNameOf<Map<String, Class<*>>>())
-                            .addCode(genMethodRouterBody(routerList))
-                            .build()
-                    )
-                    .addFunction(
-                        FunSpec.builder("service")
-                            .returns(typeNameOf<Map<Class<*>, Class<*>>>())
-                            .addCode(genMethodServiceBody(serviceList))
-                            .build()
-                    )
-                    .addKdoc("generate by router ksp").build()
+                    .addFunction(genMethodRouter(routerList))
+                    .addFunction(genMethodService(serviceList))
+                    .addKdoc("generate by router ksp")
+                    .build()
             ).apply {
                 routerList.forEach { addImport(it.clazzPackage, it.clazzName) }
             }.build()
@@ -84,7 +74,8 @@ class RouterProcess(private val codeGenerator: CodeGenerator) {
         os.bufferedWriter().use { fs.writeTo(it) }
     }
 
-    private fun genMethodRouterBody(list: List<RouterConfig>): String {
+    @OptIn(ExperimentalStdlibApi::class)
+    private fun genMethodRouter(list: List<RouterConfig>): FunSpec {
         val sb = StringBuilder()
         sb.append("val map = HashMap<String, Class<*>>()").append("\n")
         list.forEach {
@@ -94,10 +85,15 @@ class RouterProcess(private val codeGenerator: CodeGenerator) {
             sb.append(item).append("\n")
         }
         sb.append("return map").append("\n")
-        return sb.toString()
+
+        return FunSpec.builder("router")
+            .returns(typeNameOf<Map<String, Class<*>>>())
+            .addCode(sb.toString())
+            .build()
     }
 
-    private fun genMethodServiceBody(list: List<ServiceConfig>): String {
+    @OptIn(ExperimentalStdlibApi::class)
+    private fun genMethodService(list: List<ServiceConfig>): FunSpec {
         val sb = StringBuilder()
         sb.append("val map = HashMap<Class<*>, Class<*>>()").append("\n")
         list.forEach {
@@ -111,6 +107,10 @@ class RouterProcess(private val codeGenerator: CodeGenerator) {
             sb.append(item).append("\n")
         }
         sb.append("return map").append("\n")
-        return sb.toString()
+
+        return FunSpec.builder("service")
+            .returns(typeNameOf<Map<Class<*>, Class<*>>>())
+            .addCode(sb.toString())
+            .build()
     }
 }
