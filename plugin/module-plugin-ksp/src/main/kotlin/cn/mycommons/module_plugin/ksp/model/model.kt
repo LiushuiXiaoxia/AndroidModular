@@ -1,6 +1,6 @@
 package cn.mycommons.module_plugin.ksp.model
 
-import com.google.devtools.ksp.symbol.KSAnnotation
+import cn.mycommons.modulebase.annotations.RouterParam
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.symbol.KSType
@@ -18,18 +18,18 @@ data class RouterConfig(
 }
 
 data class ServiceConfig(
-    val clazz: KSClassDeclaration,
+    val self: KSClassDeclaration,
     val parent: KSType,
 ) {
 
     override fun toString(): String {
-        return "ServiceConfig(clazz=$clazz, parent=${parent.javaClass})"
+        return "ServiceConfig(clazz=$self, annotation=${parent})"
     }
 }
 
 data class RouterParamConfig(
     val field: KSPropertyDeclaration,
-    val annotation: KSAnnotation,
+    val annotation: RouterParam,
 ) {
 
     override fun toString(): String {

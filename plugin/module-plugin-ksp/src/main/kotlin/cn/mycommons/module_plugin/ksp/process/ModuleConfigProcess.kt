@@ -6,6 +6,8 @@ import cn.mycommons.module_plugin.ksp.model.RouterConfig
 import cn.mycommons.module_plugin.ksp.model.ServiceConfig
 import cn.mycommons.modulebase.annotations.Implements
 import cn.mycommons.modulebase.annotations.Router
+import com.google.devtools.ksp.KspExperimental
+import com.google.devtools.ksp.getAnnotationsByType
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.symbol.KSClassDeclaration
@@ -17,20 +19,20 @@ import com.squareup.kotlinpoet.typeNameOf
 
 class ModuleConfigProcess(private val codeGenerator: CodeGenerator) {
 
+    @OptIn(KspExperimental::class)
     fun process(routers: List<KSClassDeclaration>, services: List<KSClassDeclaration>) {
         val routerList = mutableListOf<RouterConfig>()
         routers.forEach {
-            val an = it.annotations.firstOrNull { a -> a.shortName.asString() == Router::class.java.simpleName }
+            val an = it.getAnnotationsByType(Router::class).firstOrNull()
             if (an != null) {
-                val uri = an.arguments.firstOrNull { a -> a.name?.asString() == "uri" }?.value
-                if (uri != null) {
-                    val config = RouterConfig(uri.toString(), it.packageName.asString(), it.simpleName.asString())
-                    routerList.add(config)
-                }
+                val config = RouterConfig(an.uri, it.packageName.asString(), it.simpleName.asString())
+                routerList.add(config)
             }
         }
+
         val serviceList = mutableListOf<ServiceConfig>()
         services.forEach {
+            // val an = it.getAnnotationsByType(Implements::class).firstOrNull()
             val an = it.annotations.firstOrNull { a -> a.shortName.asString() == Implements::class.java.simpleName }
             if (an != null) {
                 val parent = an.arguments.firstOrNull { a -> a.name?.asString() == "parent" }?.value
@@ -39,10 +41,6 @@ class ModuleConfigProcess(private val codeGenerator: CodeGenerator) {
                     serviceList.add(config)
                 }
             }
-        }
-
-        if (routerList.isEmpty() && serviceList.isEmpty()) {
-            return
         }
 
         genRouterConfig(routerList, serviceList)
@@ -96,7 +94,7 @@ class ModuleConfigProcess(private val codeGenerator: CodeGenerator) {
         list.forEach {
             val parent =
                 "${it.parent.declaration.packageName.asString()}.${it.parent.declaration.simpleName.asString()}"
-            val self = "${it.clazz.packageName.asString()}.${it.clazz.simpleName.asString()}"
+            val self = "${it.self.packageName.asString()}.${it.self.simpleName.asString()}"
 
             val item = """
                 map[${parent}::class.java] = ${self}::class.java

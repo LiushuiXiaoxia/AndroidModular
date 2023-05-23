@@ -31,11 +31,12 @@ class ModuleSymbolProcessor(private val codeGenerator: CodeGenerator) : SymbolPr
         }
 
         val routerList = resolver.getSymbolsWithAnnotation(Router::class.java.name)
-            .filter { !it.validate() }
+            // .filter { !it.validate() }
             .filterIsInstance<KSClassDeclaration>()
             .toList()
+
         val serviceList = resolver.getSymbolsWithAnnotation(Implements::class.java.name)
-            .filter { !it.validate() }
+            // .filter { !it.validate() }
             .filterIsInstance<KSClassDeclaration>()
             .toList()
         PluginContextKit.saveModuleConfig(routerList, serviceList)
@@ -60,8 +61,8 @@ class ModuleSymbolProcessor(private val codeGenerator: CodeGenerator) : SymbolPr
     private fun genCode() {
         genRes()
         PluginContextKit.apply {
-            ModuleConfigProcess(codeGenerator).process(routerList, serviceList)
             RouterParamProcess(codeGenerator).process(routerParams)
+            ModuleConfigProcess(codeGenerator).process(routerList, serviceList)
         }
 
         codeGenerator.generatedFile.forEach {
