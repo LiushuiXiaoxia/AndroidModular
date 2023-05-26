@@ -31,12 +31,10 @@ class ModuleSymbolProcessor(private val codeGenerator: CodeGenerator) : SymbolPr
         }
 
         val routerList = resolver.getSymbolsWithAnnotation(Router::class.java.name)
-            // .filter { !it.validate() }
             .filterIsInstance<KSClassDeclaration>()
             .toList()
 
         val serviceList = resolver.getSymbolsWithAnnotation(Implements::class.java.name)
-            // .filter { !it.validate() }
             .filterIsInstance<KSClassDeclaration>()
             .toList()
         PluginContextKit.saveModuleConfig(routerList, serviceList)

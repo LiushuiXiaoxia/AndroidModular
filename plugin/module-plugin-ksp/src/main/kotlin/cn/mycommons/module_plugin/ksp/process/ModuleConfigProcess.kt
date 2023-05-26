@@ -4,6 +4,7 @@ import cn.mycommons.module_plugin.ksp.KspConsts
 import cn.mycommons.module_plugin.ksp.PluginContextKit
 import cn.mycommons.module_plugin.ksp.model.RouterConfig
 import cn.mycommons.module_plugin.ksp.model.ServiceConfig
+import cn.mycommons.module_plugin.ksp.util.LogKit
 import cn.mycommons.modulebase.annotations.Implements
 import cn.mycommons.modulebase.annotations.Router
 import com.google.devtools.ksp.KspExperimental
@@ -32,10 +33,9 @@ class ModuleConfigProcess(private val codeGenerator: CodeGenerator) {
 
         val serviceList = mutableListOf<ServiceConfig>()
         services.forEach {
-            // val an = it.getAnnotationsByType(Implements::class).firstOrNull()
-            val an = it.annotations.firstOrNull { a -> a.shortName.asString() == Implements::class.java.simpleName }
+            val an = it.filterAnnotationsByType(Implements::class).firstOrNull()
             if (an != null) {
-                val parent = an.arguments.firstOrNull { a -> a.name?.asString() == "parent" }?.value
+                val parent = an.getArgument(Implements::parent.name)
                 if (parent != null && parent is KSType) {
                     val config = ServiceConfig(it, parent)
                     serviceList.add(config)

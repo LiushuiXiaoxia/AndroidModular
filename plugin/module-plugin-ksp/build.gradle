@@ -1,6 +1,5 @@
 apply plugin: 'java'
-apply plugin: 'java-gradle-plugin'
-apply plugin: 'kotlin' // version '1.5.31'
+apply plugin: 'kotlin'
 
 buildscript {
     ext.kotlin_version = '1.7.20'
@@ -19,7 +18,6 @@ repositories {
     mavenLocal()
     google()
     mavenCentral()
-    // maven { url uri("./../repo") }
 }
 
 sourceCompatibility = "8"

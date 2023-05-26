@@ -1,5 +1,25 @@
 apply plugin: 'java'
 apply plugin: 'java-library'
+apply plugin: 'kotlin'
+
+buildscript {
+    ext.kotlin_version = '1.5.20'
+    repositories {
+        mavenLocal()
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+repositories {
+    mavenLocal()
+    google()
+    mavenCentral()
+}
 
 sourceCompatibility = "8"
 targetCompatibility = "8"
@@ -8,6 +28,6 @@ group "cn.mycommons"
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
-
-// apply from: "${project.rootDir.absolutePath}/../maven.gradle"
