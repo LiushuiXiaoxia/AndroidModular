@@ -4,7 +4,8 @@ apply plugin: 'java-gradle-plugin'
 apply plugin: 'kotlin' // version '1.5.31'
 
 buildscript {
-    ext.kotlin_version = '1.5.31'
+    // ext.kotlin_version = '1.5.31'
+    ext.kotlin_version = '1.7.20'
     repositories {
         mavenLocal()
         google()
@@ -23,10 +24,10 @@ repositories {
     // maven { url uri("./../repo") }
 }
 
-sourceCompatibility = "8"
-targetCompatibility = "8"
+sourceCompatibility = "11"
+targetCompatibility = "11"
 
-def version_build_gradle = "7.0.4"
+def version_build_gradle = "7.4.2"
 def version_android_tool = "30.0.3"
 
 group "cn.mycommons"
