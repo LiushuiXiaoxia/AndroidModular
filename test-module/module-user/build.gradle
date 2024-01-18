@@ -8,6 +8,7 @@ plugins {
 // apply plugin: 'kotlin-android'
 
 android {
+    namespace 'cn.mycommons.moduleuser'
     compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
 
     defaultConfig {
@@ -25,9 +26,6 @@ android {
         }
     }
 
-    lintOptions {
-        checkReleaseBuilds false
-    }
 
     // 让IDE识别KSP生成的代码
     libraryVariants.all { variant ->
@@ -42,6 +40,10 @@ android {
         sourceSets {
             // main.kotlin.srcDirs += 'build/generated/ksp'
         }
+    }
+
+    lint {
+        checkReleaseBuilds false
     }
 }
 

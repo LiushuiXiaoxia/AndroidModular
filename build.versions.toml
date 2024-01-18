@@ -1,6 +1,6 @@
 [versions]
 kotlin = "1.7.20"
-androidAgp = "7.4.1"
+androidAgp = "7.4.2"
 minSdkVersion = "21"
 compileSdkVersion = "32"
 targetSdkVersion = "32"

@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
+    namespace 'cn.mycommons.modulecomponent'
     compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
 
     defaultConfig {
