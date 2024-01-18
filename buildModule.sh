@@ -8,7 +8,7 @@ set -v on
 
 set -e
 
-./gradlew :test-module:app:assembleDebug --profile --no-daemon --no-build-cache -s
+./gradlew :test-module:app:assembleDebug --profile --no-daemon --no-build-cache
 #./gradlew :TestPluginApp:assembleDebug --profile --no-daemon --no-build-cache -s -w -Dorg.gradle.debug=true
 
 #exit
