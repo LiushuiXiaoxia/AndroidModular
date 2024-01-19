@@ -52,6 +52,8 @@ dependencies {
 
     implementation 'org.javassist:javassist:3.20.0-GA'
 
+    implementation("org.ow2.asm:asm-util:9.2")
+
     // compile project(':java-base')
     implementation "cn.mycommons:java-base"
 }

@@ -1,0 +1,11 @@
+hub:
+  env:
+    hello: world
+  before:
+    - mkdir -p /root/test-guh
+    - ./gradlew --stop
+    - git clean -xdf
+  build: assembleDebug --no-daemon --no-build-cache --scan -s -w
+  artifacts:
+    xbuild: test-plugin/test-plugin-app/build/outputs
+  magicMirror: true

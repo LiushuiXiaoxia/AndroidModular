@@ -16,8 +16,8 @@ include ':common:implements-process'
 
 include ':test-plugin:test-plugin-lib'
 include ':test-plugin:test-plugin-app'
-
-
-include ':test-module:module-base', ':test-module:module-service', ':test-module:module-component'
-include ':test-module:module-user', ':test-module:module-order', ':test-module:module-shopping'
-include ':test-module:app'
+//
+//
+//include ':test-module:module-base', ':test-module:module-service', ':test-module:module-component'
+//include ':test-module:module-user', ':test-module:module-order', ':test-module:module-shopping'
+//include ':test-module:app'
