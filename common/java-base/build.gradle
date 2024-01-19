@@ -5,6 +5,7 @@ apply plugin: 'kotlin'
 buildscript {
     ext.kotlin_version = '1.5.20'
     repositories {
+        maven { url 'https://maven.aliyun.com/repository/public/' }
         mavenLocal()
         google()
         mavenCentral()
@@ -16,6 +17,7 @@ buildscript {
 }
 
 repositories {
+    maven { url 'https://maven.aliyun.com/repository/public/' }
     mavenLocal()
     google()
     mavenCentral()
