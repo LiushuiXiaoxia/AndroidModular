@@ -1,5 +1,8 @@
-package cn.mycommons.module_plugin
+package cn.mycommons.module_plugin.v1
 
+import cn.mycommons.module_plugin.Consts
+import cn.mycommons.module_plugin.Entry
+import cn.mycommons.module_plugin.PluginKit
 import cn.mycommons.module_plugin.util.safeDelete
 import cn.mycommons.modulebase.annotations.Implements
 import com.android.build.api.transform.*

@@ -1,9 +1,13 @@
 package cn.mycommons.module_plugin.v2
 
+import cn.mycommons.module_plugin.Entry
+import cn.mycommons.modulebase.annotations.Implements
 import com.android.build.api.artifact.ScopedArtifact
+import com.android.build.api.transform.JarInput
 import com.android.build.api.variant.AndroidComponentsExtension
 import com.android.build.api.variant.ScopedArtifacts
 import javassist.ClassPool
+import javassist.CtClass
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.file.Directory
@@ -29,7 +33,7 @@ abstract class ModifyClassesTask : DefaultTask() {
         fun setup(project: Project, ac: AndroidComponentsExtension<*, *, *>) {
             ac.onVariants {
                 val taskProvider = project.tasks.register("${it.name}ModifyClasses", ModifyClassesTask::class.java)
-                it.artifacts.forScope(ScopedArtifacts.Scope.ALL)
+                it.artifacts.forScope(ScopedArtifacts.Scope.PROJECT)
                     .use(taskProvider)
                     .toTransform(
                         ScopedArtifact.CLASSES,
@@ -41,6 +45,7 @@ abstract class ModifyClassesTask : DefaultTask() {
         }
 
     }
+
     private val log: Logger = LoggerFactory.getLogger(javaClass)
 
     @get:InputFiles
@@ -63,7 +68,67 @@ abstract class ModifyClassesTask : DefaultTask() {
         }
         log.error("taskAction: output = ${output.get().asFile}")
 
+        // 记录所有的符合扫描条件的记录
+        val implementsList = mutableListOf<Entry>()
+        // ImplementsManager 注解所在的jar文件
+        var managerJar: JarInput? = null
+
         val pool = ClassPool(ClassPool.getDefault())
+        pool.appendSystemPath()
+
+        allDirectories.get().forEach { d ->
+            log.error("allDirectories.scan: ${d.asFile}")
+
+            pool.appendClassPath(d.asFile.absolutePath)
+            d.asFile.walkTopDown().filter { it.name.endsWith(".class") }
+                .forEach {
+                    var path = it.absolutePath.replace(d.asFile.absolutePath, "").replace("/", ".").substring(1)
+                    log.error("allDirectories.scanClass: $it -> $path")
+
+                    if (path.endsWith(".class")) {
+                        path = path.substring(0, path.length - 6)
+                        val clazz: CtClass = pool.get(path)
+                        // 如果class中的类包含注解则先收集起来
+                        kotlin.runCatching {
+                            val an = clazz.getAnnotation(Implements::class.java) as Implements?
+                            if (an != null) {
+                                implementsList.add(Entry(an, clazz))
+                            }
+                        }
+                    }
+                }
+        }
+
+        allJars.get().forEach {
+            log.error("allJars.scan: ${it.asFile}")
+
+            val file = it.asFile
+            pool.appendClassPath(file.absolutePath)
+
+            for (entry in JarFile(file).entries()) {
+                var path = entry.name.replace("/", ".")
+                log.error("allJars.scanClass: $it -> $path")
+
+                if (path.endsWith(".class")) {
+                    path = path.substring(0, path.length - 6)
+                    val clazz = pool.get(path)
+                    kotlin.runCatching {
+                        val an = clazz.getAnnotation(Implements::class.java) as Implements?
+                        if (an != null) {
+                            implementsList.add(Entry(an, clazz))
+                        }
+                    }
+                }
+            }
+        }
+
+        log.error("implementsList: ${implementsList.size}")
+
+        implementsList.forEach {
+            log.error("implementsList: $it")
+        }
+
+        return
 
         val jarOutput = JarOutputStream(BufferedOutputStream(FileOutputStream(output.get().asFile)))
         allJars.get().forEach { file ->
