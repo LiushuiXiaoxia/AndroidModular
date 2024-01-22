@@ -1,9 +1,10 @@
 package cn.mycommons.module_plugin.v2
 
+import cn.mycommons.module_plugin.Consts
 import cn.mycommons.module_plugin.Entry
+import cn.mycommons.module_plugin.PluginKit
 import cn.mycommons.modulebase.annotations.Implements
 import com.android.build.api.artifact.ScopedArtifact
-import com.android.build.api.transform.JarInput
 import com.android.build.api.variant.AndroidComponentsExtension
 import com.android.build.api.variant.ScopedArtifacts
 import javassist.ClassPool
@@ -19,7 +20,6 @@ import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.util.jar.JarEntry
@@ -33,7 +33,7 @@ abstract class ModifyClassesTask : DefaultTask() {
         fun setup(project: Project, ac: AndroidComponentsExtension<*, *, *>) {
             ac.onVariants {
                 val taskProvider = project.tasks.register("${it.name}ModifyClasses", ModifyClassesTask::class.java)
-                it.artifacts.forScope(ScopedArtifacts.Scope.PROJECT)
+                it.artifacts.forScope(ScopedArtifacts.Scope.ALL)
                     .use(taskProvider)
                     .toTransform(
                         ScopedArtifact.CLASSES,
@@ -71,8 +71,7 @@ abstract class ModifyClassesTask : DefaultTask() {
         // 记录所有的符合扫描条件的记录
         val implementsList = mutableListOf<Entry>()
         // ImplementsManager 注解所在的jar文件
-        var managerJar: JarInput? = null
-
+        var managerJar: File? = null
         val pool = ClassPool(ClassPool.getDefault())
         pool.appendSystemPath()
 
@@ -83,7 +82,7 @@ abstract class ModifyClassesTask : DefaultTask() {
             d.asFile.walkTopDown().filter { it.name.endsWith(".class") }
                 .forEach {
                     var path = it.absolutePath.replace(d.asFile.absolutePath, "").replace("/", ".").substring(1)
-                    log.error("allDirectories.scanClass: $it -> $path")
+                    // log.error("allDirectories.scanClass: $it -> $path")
 
                     if (path.endsWith(".class")) {
                         path = path.substring(0, path.length - 6)
@@ -105,9 +104,13 @@ abstract class ModifyClassesTask : DefaultTask() {
             val file = it.asFile
             pool.appendClassPath(file.absolutePath)
 
+            if (managerJar == null && PluginKit.isImplementsManager(it.asFile)) {
+                managerJar = it.asFile
+            }
+
             for (entry in JarFile(file).entries()) {
                 var path = entry.name.replace("/", ".")
-                log.error("allJars.scanClass: $it -> $path")
+                // log.error("allJars.scanClass: $it -> $path")
 
                 if (path.endsWith(".class")) {
                     path = path.substring(0, path.length - 6)
@@ -128,56 +131,85 @@ abstract class ModifyClassesTask : DefaultTask() {
             log.error("implementsList: $it")
         }
 
-        return
 
-        val jarOutput = JarOutputStream(BufferedOutputStream(FileOutputStream(output.get().asFile)))
+        val outputSet = mutableSetOf<String>()
+        val jarOutput = JarOutputStream(FileOutputStream(output.get().asFile))
         allJars.get().forEach { file ->
-            log.error("handling " + file.asFile.getAbsolutePath())
+            // log.error("handling " + file.asFile.getAbsolutePath())
             val jarFile = JarFile(file.asFile)
-            jarFile.entries().iterator().forEach { jarEntry ->
-                log.error("Adding from jar ${jarEntry.name}")
-                jarOutput.putNextEntry(JarEntry(jarEntry.name))
-                jarFile.getInputStream(jarEntry).use {
-                    it.copyTo(jarOutput)
+            for (e in jarFile.entries().iterator()) {
+                if (outputSet.contains(e.name)) {
+                    continue
                 }
-                jarOutput.closeEntry()
+                outputSet.add(e.name)
+//                log.error("Adding from jar ${e.name}")
+                if (e.name == Consts.IMPLEMENTS_MANAGER) {
+                    val config = parseConfig(implementsList)
+                    project.logger.error("config = $config")
+                    val managerCtClass = pool.get(Consts.IMPLEMENTS_MANAGER_NAME)
+
+                    // 修改class，在class中插入静态代码块，做初始化
+                    val body = genMethodBody(config)
+                    project.logger.error("body = " + body.joinToString("\n"))
+                    if (managerCtClass.isFrozen) {
+                        managerCtClass.defrost()
+                    }
+                    managerCtClass.makeClassInitializer().setBody(body.joinToString("\n"))
+
+                    val data = managerCtClass.toBytecode()
+
+                    jarOutput.putNextEntry(JarEntry(e.name))
+                    jarOutput.write(data)
+                    jarOutput.closeEntry()
+                } else {
+                    jarOutput.putNextEntry(JarEntry(e.name))
+                    jarFile.getInputStream(e).use { it.copyTo(jarOutput) }
+                    jarOutput.closeEntry()
+                }
             }
             jarFile.close()
         }
+
         allDirectories.get().forEach { directory ->
-            log.error("handling " + directory.asFile.getAbsolutePath())
-            directory.asFile.walk().forEach { file ->
+            // log.error("handling " + directory.asFile.getAbsolutePath())
+            for (file in directory.asFile.walk()) {
                 if (file.isFile) {
-                    if (file.name.endsWith("SomeSource.class")) {
-                        log.error("Found $file.name")
-                        val interfaceClass = pool.makeInterface("com.android.api.tests.SomeInterface");
-                        log.error("Adding $interfaceClass")
-                        jarOutput.putNextEntry(JarEntry("com/android/api/tests/SomeInterface.class"))
-                        jarOutput.write(interfaceClass.toBytecode())
-                        jarOutput.closeEntry()
-                        val ctClass = file.inputStream().use {
-                            pool.makeClass(it)
-                        }
-                        ctClass.addInterface(interfaceClass)
-
-                        val m = ctClass.getDeclaredMethod("toString");
-                        if (m != null) {
-                            m.insertBefore("{ System.out.println(\"Some Extensive Tracing\"); }");
-
-                            val relativePath = directory.asFile.toURI().relativize(file.toURI()).getPath()
-                            jarOutput.putNextEntry(JarEntry(relativePath.replace(File.separatorChar, '/')))
-                            jarOutput.write(ctClass.toBytecode())
-                            jarOutput.closeEntry()
-                        } else {
-                            addClass(directory, file, jarOutput)
-                        }
-                    } else {
-                        addClass(directory, file, jarOutput)
+                    val relativePath = directory.asFile.toURI().relativize(file.toURI()).getPath()
+                    val entryName = relativePath.replace(File.separatorChar, '/')
+                    if (outputSet.contains(entryName)) {
+                        continue
                     }
+                    outputSet.add(entryName)
+                    addClass(directory, file, jarOutput)
                 }
             }
         }
         jarOutput.close()
+
+    }
+
+    private fun parseConfig(implementsList: MutableList<Entry>): LinkedHashMap<String, String> {
+        val config = linkedMapOf<String, String>()
+        implementsList.forEach {
+            val str = it.anImplements.toString()
+            val parent = str.substring(str.indexOf("(") + 1, str.indexOf(")"))
+                .replace("parent=", "").replace(".class", "")
+
+            // 收集所有的接口以及实现类的路径
+            config[parent] = it.ctClass.name
+        }
+        return config
+    }
+
+    private fun genMethodBody(config: Map<String, String>): List<String> {
+        return mutableListOf<String>().apply {
+            add("{")
+            add("\tCONFIG = new java.util.HashMap();")
+            config.forEach {
+                add("\tCONFIG.put(${it.key}.class, ${it.value}.class);")
+            }
+            add("}")
+        }
     }
 
     private fun addClass(directory: Directory, file: File, jarOutput: JarOutputStream) {

@@ -8,4 +8,4 @@ hub:
   build: assembleDebug --no-daemon --no-build-cache --scan -s -w
   artifacts:
     xbuild: test-plugin/test-plugin-app/build/outputs
-  magicMirror: true
+#  magicMirror: true

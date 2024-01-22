@@ -37,6 +37,36 @@ allprojects {
     }
 }
 
+gradle.addListener(new TaskActionListener() {
+
+    @Override
+    void beforeActions(Task task) {
+        def name = task.name
+        if (name.startsWith("dexBuilder")) {
+            for (def f in task.inputs.files.files) {
+                logger.quiet("${name}.inputs: $f")
+            }
+        }
+    }
+
+    @Override
+    void afterActions(Task task) {
+        def name = task.name
+        if (name.startsWith("dexBuilder")) {
+            for (def f in task.outputs.files.files) {
+                logger.quiet("${name}.outputs: $f")
+            }
+        }
+    }
+})
+
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+if (hasProperty('buildScan')) {
+    buildScan {
+        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+        termsOfServiceAgree = 'yes'
+    }
 }
