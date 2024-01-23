@@ -14,8 +14,8 @@ if (Boolean.parseBoolean(PLUGIN_DEV)) {
 include ':common:implements-process'
 
 
-//include ':test-plugin:test-plugin-lib'
-//include ':test-plugin:test-plugin-app'
+include ':test-plugin:test-plugin-lib'
+include ':test-plugin:test-plugin-app'
 
 
 include ':test-module:module-base', ':test-module:module-service', ':test-module:module-component'
