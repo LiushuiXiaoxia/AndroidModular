@@ -1,6 +1,6 @@
 package cn.mycommons.module_plugin
 
-import cn.mycommons.module_plugin.v2.ModifyClassesTask
+import cn.mycommons.module_plugin.core.v2.ModuleProcessTask
 import com.android.build.api.variant.AndroidComponentsExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -16,7 +16,6 @@ class ModulePlugin : Plugin<Project> {
 //        app.registerTransform(ModulePluginTransform(project))
 
         val ac = project.extensions.getByType(AndroidComponentsExtension::class.java)
-        ModifyClassesTask.setup(project, ac)
-//        AddClassesTask.setup(project, ac)
+        ModuleProcessTask.setup(project, ac)
     }
 }

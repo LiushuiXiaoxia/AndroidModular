@@ -1,4 +1,4 @@
-package cn.mycommons.module_plugin
+package cn.mycommons.module_plugin.core
 
 object Consts {
     const val IMPLEMENTS_MANAGER = "cn/mycommons/modulebase/annotations/ImplementsManager.class"

@@ -1,8 +1,8 @@
-package cn.mycommons.module_plugin.v1
+package cn.mycommons.module_plugin.core.v1
 
-import cn.mycommons.module_plugin.Consts
-import cn.mycommons.module_plugin.Entry
-import cn.mycommons.module_plugin.PluginKit
+import cn.mycommons.module_plugin.core.Consts
+import cn.mycommons.module_plugin.core.ImplementRecord
+import cn.mycommons.module_plugin.core.PluginKit
 import cn.mycommons.module_plugin.util.safeDelete
 import cn.mycommons.modulebase.annotations.Implements
 import com.android.build.api.transform.*
@@ -42,7 +42,7 @@ class ModulePluginTransform(private val project: Project) : Transform() {
         classPool.appendSystemPath()
 
         // 记录所有的符合扫描条件的记录
-        val implementsList = mutableListOf<Entry>()
+        val implementsList = mutableListOf<ImplementRecord>()
         // ImplementsManager 注解所在的jar文件
         var managerJar: JarInput? = null
 
@@ -64,7 +64,7 @@ class ModulePluginTransform(private val project: Project) : Transform() {
                         kotlin.runCatching {
                             val an = clazz.getAnnotation(Implements::class.java) as Implements?
                             if (an != null) {
-                                implementsList.add(Entry(an, clazz))
+                                implementsList.add(ImplementRecord(an, clazz))
                             }
                         }
                     }
@@ -93,7 +93,7 @@ class ModulePluginTransform(private val project: Project) : Transform() {
                             kotlin.runCatching {
                                 val an = clazz.getAnnotation(Implements::class.java) as Implements?
                                 if (an != null) {
-                                    implementsList.add(Entry(an, clazz))
+                                    implementsList.add(ImplementRecord(an, clazz))
                                 }
                             }
                         }
@@ -142,7 +142,7 @@ class ModulePluginTransform(private val project: Project) : Transform() {
         }
     }
 
-    private fun parseConfig(implementsList: MutableList<Entry>): LinkedHashMap<String, String> {
+    private fun parseConfig(implementsList: MutableList<ImplementRecord>): LinkedHashMap<String, String> {
         val config = linkedMapOf<String, String>()
         implementsList.forEach {
             val str = it.anImplements.toString()

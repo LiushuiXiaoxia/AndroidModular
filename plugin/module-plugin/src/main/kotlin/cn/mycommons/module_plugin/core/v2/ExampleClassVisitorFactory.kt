@@ -1,4 +1,4 @@
-package cn.mycommons.module_plugin.v2
+package cn.mycommons.module_plugin.core.v2
 
 import com.android.build.api.instrumentation.AsmClassVisitorFactory
 import com.android.build.api.instrumentation.ClassContext
