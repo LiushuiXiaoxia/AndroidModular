@@ -19,7 +19,7 @@ buildscript {
         // classpath "cn.mycommons:ImplementsTransformPlugin:$LIB_VERSION"
 
         // classpath 'com.android.tools:r8:4.0.48'
-        classpath 'com.android.tools:r8:8.0.40'
+        // classpath 'com.android.tools:r8:8.0.40'
 
         if (Boolean.parseBoolean(PLUGIN_DEV)) {
             classpath "cn.mycommons:module-plugin"
