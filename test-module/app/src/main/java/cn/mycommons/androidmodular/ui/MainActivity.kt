@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import cn.mycommons.androidmodular.InjectHelper
 import cn.mycommons.androidmodular.R
+import cn.mycommons.androidmodular.BuildConfig
 import cn.mycommons.androidmodular.RouterHelper
 import cn.mycommons.androidmodular.databinding.ActivityMainBinding
 import cn.mycommons.modulebase.base.BaseActivity
@@ -31,5 +32,6 @@ class MainActivity : BaseActivity() {
         binding.btnGotoUser.setOnClickListener { RouterHelper.dispatch(getContext(), "app://user") }
 
         Log.i(TAG, "onCreate: ${UserActivity__RouterInject::class.java}")
+        Log.i(TAG, "BuildConfig: ${BuildConfig::class.java}")
     }
 }
