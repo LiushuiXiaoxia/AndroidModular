@@ -16,18 +16,7 @@ class ModulePlugin : Plugin<Project> {
 //        app.registerTransform(ModulePluginTransform(project))
 
         val ac = project.extensions.getByType(AndroidComponentsExtension::class.java)
-//        ac.onVariants {
-//            it.instrumentation.transformClassesWith(
-//                ExampleClassVisitorFactory::class.java,
-//                InstrumentationScope.ALL
-//            ) { p ->
-//                p.writeToStdout.set(false)
-//            }
-//            it.instrumentation.setAsmFramesComputationMode(FramesComputationMode.COPY_FRAMES)
-//        }
-
         ModifyClassesTask.setup(project, ac)
-
 //        AddClassesTask.setup(project, ac)
     }
 }
