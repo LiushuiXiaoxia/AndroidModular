@@ -13,5 +13,8 @@ make debug
 make module
 ```
 
-
 [关于Android模块化我有一些话不知当讲不当讲](README2.md)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=LiushuiXiaoxia/AndroidModular&type=Date)](https://star-history.com/#LiushuiXiaoxia/AndroidModular&Date)

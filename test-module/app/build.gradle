@@ -1,0 +1,72 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+// apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    namespace 'cn.mycommons.androidmodular'
+    compileSdk libs.versions.compileSdkVersion.get().toInteger()
+
+    defaultConfig {
+        applicationId "cn.mycommons.androidmodular"
+        minSdkVersion libs.versions.minSdkVersion.get().toInteger()
+        targetSdkVersion libs.versions.targetSdkVersion.get().toInteger()
+        versionCode 1
+        versionName "1.0"
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    signingConfigs {
+        test1 {
+            def keystorePropertiesFile = project.file("test1.properties")
+            def keystoreProperties = new Properties()
+            keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+            storeFile project.file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.test1
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+}
+
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // kapt "com.android.databinding:compiler:$rootProject.ext.gradle_version"
+
+    // common
+    implementation project(':test-module:module-base')
+    implementation project(':test-module:module-component')
+    implementation project(':test-module:module-service')
+    // api "cn.mycommons:ModuleBase:$LIB_VERSION"
+    // api "cn.mycommons:ModuleComponent:$LIB_VERSION"
+    // api "cn.mycommons:ModuleService:$LIB_VERSION"
+
+    // biz
+    implementation project(':test-module:module-user')
+    implementation project(':test-module:module-order')
+    implementation project(':test-module:module-shopping')
+}
+
+apply plugin: 'moduleplugin'

@@ -1,0 +1,52 @@
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+buildscript {
+    ext.kotlin_version = '1.9.22'
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        mavenLocal()
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+repositories {
+    maven { url 'https://maven.aliyun.com/repository/public/' }
+    mavenLocal()
+    google()
+    mavenCentral()
+}
+
+sourceCompatibility = "11"
+targetCompatibility = "11"
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+}
+
+group "cn.mycommons"
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    implementation "cn.mycommons:java-base"
+
+    implementation "com.google.code.gson:gson:2.10.1"
+    implementation "com.google.devtools.ksp:symbol-processing-api:1.9.22-1.0.17"
+    implementation 'com.squareup:kotlinpoet:1.14.2'
+}
