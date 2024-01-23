@@ -5,7 +5,7 @@ apply plugin: 'kotlin-kapt'
 
 android {
     namespace 'cn.mycommons.androidmodular'
-    compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
+    compileSdk libs.versions.compileSdkVersion.get().toInteger()
 
     defaultConfig {
         applicationId "cn.mycommons.androidmodular"

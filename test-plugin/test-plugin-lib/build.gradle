@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 
 android {
     namespace 'cn.mycommons.testpluginlib'
-    compileSdkVersion libs.versions.compileSdkVersion.get().toInteger()
+    compileSdk libs.versions.compileSdkVersion.get().toInteger()
 
     defaultConfig {
         minSdkVersion libs.versions.minSdkVersion.get().toInteger()
