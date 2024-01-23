@@ -29,6 +29,18 @@ repositories {
 sourceCompatibility = "11"
 targetCompatibility = "11"
 
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+}
+
 def version_build_gradle = "7.4.2"
 def version_android_tool = "30.0.3"
 

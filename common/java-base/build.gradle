@@ -3,7 +3,7 @@ apply plugin: 'java-library'
 apply plugin: 'kotlin'
 
 buildscript {
-    ext.kotlin_version = '1.5.20'
+    ext.kotlin_version = '1.9.20'
     repositories {
         maven { url 'https://maven.aliyun.com/repository/public/' }
         mavenLocal()
@@ -23,8 +23,20 @@ repositories {
     mavenCentral()
 }
 
-sourceCompatibility = "8"
-targetCompatibility = "8"
+sourceCompatibility = "11"
+targetCompatibility = "11"
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+}
 
 group "cn.mycommons"
 
