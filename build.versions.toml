@@ -1,6 +1,6 @@
 [versions]
 kotlin = "1.9.22"
-androidAgp = "8.3.0-beta02"
+androidAgp = "8.2.0"
 minSdkVersion = "21"
 compileSdkVersion = "34"
 targetSdkVersion = "33"
