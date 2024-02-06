@@ -47,8 +47,6 @@ abstract class ModuleProcessTask : DefaultTask() {
 
     }
 
-    private val log: Logger = LoggerFactory.getLogger(javaClass)
-
     @get:InputFiles
     abstract val allJars: ListProperty<RegularFile>
 
@@ -60,11 +58,6 @@ abstract class ModuleProcessTask : DefaultTask() {
 
     @TaskAction
     fun taskAction() {
-//        log.error("taskAction")
-//        allJars.get().forEach { log.error("taskAction: allJars = ${it.asFile}") }
-//        allDirectories.get().forEach { log.error("taskAction: allDirectories = ${it.asFile}") }
-//        log.error("taskAction: output = ${output.get().asFile}")
-
         // 记录所有的符合扫描条件的记录
         val implementsList = mutableListOf<ImplementRecord>()
         // ImplementsManager 注解所在的jar文件
@@ -103,23 +96,25 @@ abstract class ModuleProcessTask : DefaultTask() {
             }
         }
 
-        log.error("implementsList: ${implementsList.size}")
+        logger.quiet("implementsList: ${implementsList.size}")
         implementsList.forEach {
-            log.error("implementsList: $it")
+            logger.quiet("implementsList: $it")
         }
 
         val outputSet = mutableSetOf<String>() // 已经添加过的文件
-        val outputJar = JarOutputStream(FileOutputStream(output.get().asFile))
+        val tmpOutput = File.createTempFile("${name}-", ".jar")
+        logger.quiet("tmpOutput = $tmpOutput")
+        val tmpOutputJar = JarOutputStream(FileOutputStream(tmpOutput))
 
         allDirectories.get().forEach { d ->
             for (file in d.asFile.walk()) {
                 if (file.isFile) {
                     val entryName = file.toRelativeString(d.asFile)
                     if (outputSet.contains(entryName)) {
-                        log.error("skip entry: $entryName in $d")
+                        logger.error("skip entry: $entryName in $d")
                         continue
                     }
-                    addClass(d, file, outputJar)
+                    addClass(d, file, tmpOutputJar)
                     outputSet.add(entryName)
                 }
             }
@@ -130,24 +125,31 @@ abstract class ModuleProcessTask : DefaultTask() {
             for (e in jarFile.entries().iterator()) {
                 if (outputSet.contains(e.name)) {
                     if (!e.isDirectory) {
-                        log.error("skip entry: ${e.name} in $file")
+                        logger.error("skip entry: ${e.name} in $file")
                     }
                     continue
                 }
-                outputJar.putNextEntry(JarEntry(e.name))
+                tmpOutputJar.putNextEntry(JarEntry(e.name))
                 val data = if (e.name == Consts.IMPLEMENTS_MANAGER) {
                     modifyClass(pool.get(Consts.IMPLEMENTS_MANAGER_NAME), implementsList)
                 } else {
                     jarFile.getInputStream(e).readBytes()
                 }
-                outputJar.write(data)
-                outputJar.closeEntry()
+                tmpOutputJar.write(data)
+                tmpOutputJar.closeEntry()
                 outputSet.add(e.name)
             }
             jarFile.close()
         }
 
-        outputJar.close()
+        tmpOutputJar.close()
+        output.get().asFile.let {
+            if (it.exists()) {
+                it.delete()
+            }
+            tmpOutput.copyTo(it)
+            tmpOutput.delete()
+        }
     }
 
     // 如果class中的类包含注解则先收集起来
@@ -163,7 +165,7 @@ abstract class ModuleProcessTask : DefaultTask() {
     private fun modifyClass(cc: CtClass, implementsList: List<ImplementRecord>): ByteArray {
         // 修改class，在class中插入静态代码块，做初始化
         val body = PluginKit.genConfigMethod(implementsList)
-        log.error("body = " + body.joinToString("\n"))
+        logger.quiet("body = " + body.joinToString("\n"))
 
         if (cc.isFrozen) {
             cc.defrost()
